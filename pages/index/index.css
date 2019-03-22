@@ -58,3 +58,59 @@
 		height:220upx;
 		margin-top:10upx;
 	}
+	.guess-u-like{
+		margin-top:10upx;
+	}
+	.guess-u-like-content{
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		padding:30upx 20upx;
+	}
+	.guess-u-like-movie{
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+	}
+	.like-movie-cover{
+		width:180upx;
+		height:240upx;
+		border-radius:3%;
+	}
+	.movie-diretion{
+		width:340upx;
+		display: flex;
+		flex-direction: column;
+	}
+	.movie-title{
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	.movie-info{
+		color:#ccc;
+		font-size: 14px;
+	}
+	
+	/* 点赞 */
+	.movie-oper{
+		width:140upx;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		border-left:dashed 2px #dbdbdb;
+	}
+	.icon-praise{
+		width:40upx;
+		height:40upx;
+	}
+	.praise-me{
+		font-size: 14px;
+		color: #feb932;
+		padding:10upx 0;
+	}
+	.animation-opactity{
+		font-weight:bold;
+		opacity:0;
+	}

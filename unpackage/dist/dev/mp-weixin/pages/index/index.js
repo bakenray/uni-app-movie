@@ -385,11 +385,20 @@ var _trailerStars = _interopRequireDefault(__webpack_require__(/*! ../../compone
       title: 'Hello',
       bannerImages: [],
       hotSuperheroList: [],
-      hotTrailerList: [] };
+      hotTrailerList: [],
+      guessULike: [],
+      animationData: {} };
 
+  },
+  onUnload: function onUnload() {
+    // 页面卸载时候,清空动画数据
+    this.animationData = {};
   },
   onLoad: function onLoad() {var _this = this;
     var serverUrl = _common.default.serverUrl;
+    // 页面创建时候,创建一个临时动画对象
+    this.animation = uni.createAnimation();
+
     // banner
     uni.request({
       url: serverUrl + '/index/carousel/list',
@@ -417,22 +426,38 @@ var _trailerStars = _interopRequireDefault(__webpack_require__(/*! ../../compone
       success: function success(res) {
         if (res.data.status === 200) {
           _this.hotTrailerList = res.data.data;
-          console.log(_this.hotTrailerList);
         }
       } });
 
-    // 		// 猜你喜欢
-    // 		uni.request({
-    // 			url: serverUrl+ '/index/guessULike',
-    // 			method:'POST',
-    // 			success: res => {
-    // 				if(res.data.status ===200){
-    // 					console.log(res)
-    // 				}
-    // 			},
-    // 		});
+    // 猜你喜欢
+    uni.request({
+      url: serverUrl + '/index/guessULike',
+      method: 'POST',
+      success: function success(res) {
+        if (res.data.status === 200) {
+          _this.guessULike = res.data.data;
+          console.log(res);
+        }
+      } });
+
   },
-  methods: {},
+  methods: {
+    // 点赞动画
+    praiseMe: function praiseMe() {
+      // 构建动画数据,并且使用step 表示动画完成
+      this.animation.translateY(-80).opacity(1).step({
+        duration: 400 });
+
+      // 导出动画数据到组件
+      this.animationData = this.animation.export();
+      // 还原动画
+      setTimeout(function () {
+        this.animation.translateY(0).opacity(0).step({
+          duration: 0 });
+
+        this.animationData = this.animation.export();
+      }.bind(this), 900);
+    } },
 
   components: {
     trailerStars: _trailerStars.default } };exports.default = _default;
@@ -605,6 +630,66 @@ var render = function() {
             })
           })
         )
+      ]),
+      _c("view", { staticClass: "page-block guess-u-like" }, [
+        _vm._m(2),
+        _c("view", { staticClass: "guess-u-like-content" }, [
+          _c("view", { staticClass: "guess-u-like-movie" }, [
+            _c("image", {
+              staticClass: "like-movie-cover",
+              attrs: {
+                src:
+                  "http://122.152.205.72:88/superhero/MARVEL/AntMan2/cover.jpg"
+              }
+            }),
+            _c(
+              "view",
+              { staticClass: "movie-diretion" },
+              [
+                _c("view", { staticClass: "movie-title" }, [
+                  _vm._v("标题不同艾特标题不同艾特标题不同艾特")
+                ]),
+                _c("trailerStars", {
+                  attrs: {
+                    innerScore: 9.1,
+                    showNum: "0",
+                    mpcomid: "6b59bab6-2"
+                  }
+                }),
+                _c("view", { staticClass: "movie-info" }, [
+                  _vm._v("2018/美国/科幻/动作")
+                ]),
+                _c("view", { staticClass: "movie-info" }, [
+                  _vm._v("本xxxx/水电费~打/该耳朵")
+                ])
+              ],
+              1
+            ),
+            _c(
+              "view",
+              {
+                staticClass: "movie-oper",
+                attrs: { eventid: "6b59bab6-0" },
+                on: { tap: _vm.praiseMe }
+              },
+              [
+                _c("image", {
+                  staticClass: "icon-praise",
+                  attrs: { src: "../../static/icons/icon_praise.png" }
+                }),
+                _c("view", { staticClass: "praise-me" }, [_vm._v("点赞")]),
+                _c(
+                  "view",
+                  {
+                    staticClass: "praise-me animation-opactity",
+                    attrs: { animation: _vm.animationData }
+                  },
+                  [_vm._v("+1")]
+                )
+              ]
+            )
+          ])
+        ])
       ])
     ],
     1
@@ -633,6 +718,18 @@ var staticRenderFns = [
         attrs: { src: "../../static/icons/iocn_hot_trailer.png" }
       }),
       _c("view", { staticClass: "hot-title" }, [_vm._v("热门预告")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("view", { staticClass: "hot-title-wapper" }, [
+      _c("image", {
+        staticClass: "hot-icon",
+        attrs: { src: "../../static/icons/icon_guess_u_like.png" }
+      }),
+      _c("view", { staticClass: "hot-title" }, [_vm._v("猜你喜欢")])
     ])
   }
 ]

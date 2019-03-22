@@ -109,4 +109,99 @@
 		height:220rpx;
 		margin-top:10rpx;
 }
-
+.guess-u-like{
+		margin-top:10rpx;
+}
+.guess-u-like-content{
+		display: -webkit-box;
+		display: -webkit-flex;
+		display: -ms-flexbox;
+		display: flex;
+		-webkit-box-orient: vertical;
+		-webkit-box-direction: normal;
+		-webkit-flex-direction: column;
+		    -ms-flex-direction: column;
+		        flex-direction: column;
+		-webkit-box-pack: justify;
+		-webkit-justify-content: space-between;
+		    -ms-flex-pack: justify;
+		        justify-content: space-between;
+		padding:30rpx 20rpx;
+}
+.guess-u-like-movie{
+		display: -webkit-box;
+		display: -webkit-flex;
+		display: -ms-flexbox;
+		display: flex;
+		-webkit-box-orient: horizontal;
+		-webkit-box-direction: normal;
+		-webkit-flex-direction: row;
+		    -ms-flex-direction: row;
+		        flex-direction: row;
+		-webkit-box-pack: justify;
+		-webkit-justify-content: space-between;
+		    -ms-flex-pack: justify;
+		        justify-content: space-between;
+}
+.like-movie-cover{
+		width:180rpx;
+		height:240rpx;
+		border-radius:3%;
+}
+.movie-diretion{
+		width:340rpx;
+		display: -webkit-box;
+		display: -webkit-flex;
+		display: -ms-flexbox;
+		display: flex;
+		-webkit-box-orient: vertical;
+		-webkit-box-direction: normal;
+		-webkit-flex-direction: column;
+		    -ms-flex-direction: column;
+		        flex-direction: column;
+}
+.movie-title{
+		white-space: nowrap;
+		overflow: hidden;
+		-o-text-overflow: ellipsis;
+		   text-overflow: ellipsis;
+}
+.movie-info{
+		color:#ccc;
+		font-size: 14px;
+}
+	/* 点赞 */
+.movie-oper{
+		width:140rpx;
+		display: -webkit-box;
+		display: -webkit-flex;
+		display: -ms-flexbox;
+		display: flex;
+		-webkit-box-orient: vertical;
+		-webkit-box-direction: normal;
+		-webkit-flex-direction: column;
+		    -ms-flex-direction: column;
+		        flex-direction: column;
+		-webkit-box-pack: center;
+		-webkit-justify-content: center;
+		    -ms-flex-pack: center;
+		        justify-content: center;
+		-webkit-box-align: center;
+		-webkit-align-items: center;
+		    -ms-flex-align: center;
+		        align-items: center;
+		border-left:dashed 2px #dbdbdb;
+}
+.icon-praise{
+		width:40rpx;
+		height:40rpx;
+}
+.praise-me{
+		font-size: 14px;
+		color: #feb932;
+		padding:10rpx 0;
+}
+.animation-opactity{
+		font-weight:bold;
+		opacity:0;
+}
