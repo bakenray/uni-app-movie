@@ -387,7 +387,10 @@ var _trailerStars = _interopRequireDefault(__webpack_require__(/*! ../../compone
       hotSuperheroList: [],
       hotTrailerList: [],
       guessULike: [],
-      animationData: {} };
+      animationData: {},
+      animationDataArr: [
+      {}, {}, {}, {}, {}] };
+
 
   },
   onUnload: function onUnload() {
@@ -436,27 +439,31 @@ var _trailerStars = _interopRequireDefault(__webpack_require__(/*! ../../compone
       success: function success(res) {
         if (res.data.status === 200) {
           _this.guessULike = res.data.data;
-          console.log(res);
         }
       } });
 
   },
   methods: {
     // 点赞动画
-    praiseMe: function praiseMe() {
+    praiseMe: function praiseMe(e) {
+      var gIndex = e.currentTarget.dataset.gindex;
+      console.log(gIndex);
       // 构建动画数据,并且使用step 表示动画完成
       this.animation.translateY(-80).opacity(1).step({
-        duration: 400 });
+        duration: 200 });
 
       // 导出动画数据到组件
-      this.animationData = this.animation.export();
+      // this.animationData = this.animation.export()
+      this.animationData = this.animation;
+      this.animationDataArr[gIndex] = this.animationData.export();
       // 还原动画
       setTimeout(function () {
         this.animation.translateY(0).opacity(0).step({
           duration: 0 });
 
-        this.animationData = this.animation.export();
-      }.bind(this), 900);
+        this.animationData = this.animation;
+        this.animationDataArr[gIndex] = this.animationData.export();
+      }.bind(this), 1000);
     } },
 
   components: {
@@ -631,66 +638,79 @@ var render = function() {
           })
         )
       ]),
-      _c("view", { staticClass: "page-block guess-u-like" }, [
-        _vm._m(2),
-        _c("view", { staticClass: "guess-u-like-content" }, [
-          _c("view", { staticClass: "guess-u-like-movie" }, [
-            _c("image", {
-              staticClass: "like-movie-cover",
-              attrs: {
-                src:
-                  "http://122.152.205.72:88/superhero/MARVEL/AntMan2/cover.jpg"
-              }
-            }),
-            _c(
+      _c(
+        "view",
+        { staticClass: "page-block guess-u-like" },
+        [
+          _vm._m(2),
+          _vm._l(_vm.guessULike, function(guess, gIndex) {
+            return _c(
               "view",
-              { staticClass: "movie-diretion" },
+              { key: guess.id, staticClass: "guess-u-like-content" },
               [
-                _c("view", { staticClass: "movie-title" }, [
-                  _vm._v("标题不同艾特标题不同艾特标题不同艾特")
-                ]),
-                _c("trailerStars", {
-                  attrs: {
-                    innerScore: 9.1,
-                    showNum: "0",
-                    mpcomid: "6b59bab6-2"
-                  }
-                }),
-                _c("view", { staticClass: "movie-info" }, [
-                  _vm._v("2018/美国/科幻/动作")
-                ]),
-                _c("view", { staticClass: "movie-info" }, [
-                  _vm._v("本xxxx/水电费~打/该耳朵")
+                _c("view", { staticClass: "guess-u-like-movie" }, [
+                  _c("image", {
+                    staticClass: "like-movie-cover",
+                    attrs: { src: guess.cover }
+                  }),
+                  _c(
+                    "view",
+                    { staticClass: "movie-diretion" },
+                    [
+                      _c("view", { staticClass: "movie-title" }, [
+                        _vm._v(_vm._s(guess.name))
+                      ]),
+                      _c("trailerStars", {
+                        attrs: {
+                          innerScore: guess.score,
+                          showNum: "0",
+                          mpcomid: "6b59bab6-2-" + gIndex
+                        }
+                      }),
+                      _c("view", { staticClass: "movie-info" }, [
+                        _vm._v(_vm._s(guess.basicInfo))
+                      ]),
+                      _c("view", { staticClass: "movie-info" }, [
+                        _vm._v(_vm._s(guess.releaseDate))
+                      ])
+                    ],
+                    1
+                  ),
+                  _c(
+                    "view",
+                    {
+                      staticClass: "movie-oper",
+                      attrs: {
+                        "data-gIndex": gIndex,
+                        eventid: "6b59bab6-0-" + gIndex
+                      },
+                      on: { tap: _vm.praiseMe }
+                    },
+                    [
+                      _c("image", {
+                        staticClass: "icon-praise",
+                        attrs: { src: "../../static/icons/icon_praise.png" }
+                      }),
+                      _c("view", { staticClass: "praise-me" }, [
+                        _vm._v("点赞")
+                      ]),
+                      _c(
+                        "view",
+                        {
+                          staticClass: "praise-me animation-opactity",
+                          attrs: { animation: _vm.animationDataArr[gIndex] }
+                        },
+                        [_vm._v("+1")]
+                      )
+                    ]
+                  )
                 ])
-              ],
-              1
-            ),
-            _c(
-              "view",
-              {
-                staticClass: "movie-oper",
-                attrs: { eventid: "6b59bab6-0" },
-                on: { tap: _vm.praiseMe }
-              },
-              [
-                _c("image", {
-                  staticClass: "icon-praise",
-                  attrs: { src: "../../static/icons/icon_praise.png" }
-                }),
-                _c("view", { staticClass: "praise-me" }, [_vm._v("点赞")]),
-                _c(
-                  "view",
-                  {
-                    staticClass: "praise-me animation-opactity",
-                    attrs: { animation: _vm.animationData }
-                  },
-                  [_vm._v("+1")]
-                )
               ]
             )
-          ])
-        ])
-      ])
+          })
+        ],
+        2
+      )
     ],
     1
   )

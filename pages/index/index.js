@@ -9,7 +9,10 @@
 				hotSuperheroList:[],
 				hotTrailerList:[],
 				guessULike:[],
-				animationData:{}
+				animationData:{},
+				animationDataArr:[
+					{},{},{},{},{}
+				]
 			}
 		},
 		onUnload(){
@@ -58,27 +61,31 @@
 			success: res => {
 				if(res.data.status ===200){
 					this.guessULike = res.data.data
-					console.log(res)
 				}
 			},
 		});
 		},
 		methods: {
 			// 点赞动画
-			praiseMe(){
+			praiseMe(e){
+				var gIndex = e.currentTarget.dataset.gindex
+				console.log(gIndex)
 				// 构建动画数据,并且使用step 表示动画完成
 				this.animation.translateY(-80).opacity(1).step({
-					duration:400
+					duration:200
 				})
 				// 导出动画数据到组件
-				this.animationData = this.animation.export()
+				// this.animationData = this.animation.export()
+				this.animationData = this.animation	
+				this.animationDataArr[gIndex] = this.animationData.export()
 				// 还原动画
 				setTimeout(function(){
 					this.animation.translateY(0).opacity(0).step({
 						duration:0
 					})
-					this.animationData = this.animation.export()
-				}.bind(this),900)
+					this.animationData = this.animation	
+					this.animationDataArr[gIndex] = this.animationData.export()
+				}.bind(this),1000)
 			}
 		},
 		components:{

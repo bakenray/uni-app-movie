@@ -46,23 +46,23 @@
 				<image src="../../static/icons/icon_guess_u_like.png" class="hot-icon"></image>
 				<view class="hot-title">猜你喜欢</view>
 			</view>
-			<view class="guess-u-like-content">
+			
+			<view class="guess-u-like-content" v-for="(guess,gIndex) in guessULike" :key="guess.id">
 				<view class="guess-u-like-movie">
 					<!-- 封面 -->
-					<image src="http://122.152.205.72:88/superhero/MARVEL/AntMan2/cover.jpg" 
-					class="like-movie-cover"></image>
+					<image :src="guess.cover" class="like-movie-cover"></image>
 					<!-- 简介 -->
 					<view class="movie-diretion">
-						<view class="movie-title">标题不同艾特标题不同艾特标题不同艾特</view>
-						<trailerStars :innerScore="9.1" showNum="0"></trailerStars>
-						<view class="movie-info">2018/美国/科幻/动作</view>
-						<view class="movie-info">本xxxx/水电费~打/该耳朵</view>
+						<view class="movie-title">{{guess.name}}</view>
+						<trailerStars :innerScore="guess.score" showNum="0"></trailerStars>
+						<view class="movie-info">{{guess.basicInfo}}</view>
+						<view class="movie-info">{{guess.releaseDate}}</view>
 					</view>
 					<!-- 点赞-->
-					<view class="movie-oper" @tap="praiseMe">
+					<view class="movie-oper" :data-gIndex="gIndex" @tap="praiseMe">
 						<image class="icon-praise" src="../../static/icons/icon_praise.png"></image>
 						<view class="praise-me">点赞</view>
-						<view :animation="animationData" class="praise-me animation-opactity">+1</view>
+						<view :animation="animationDataArr[gIndex]" class="praise-me animation-opactity">+1</view>
 					</view>
 				</view>
 			</view>
