@@ -22,6 +22,9 @@
 				{},{},{},{},{}
 			]
 		},
+		onPullDownRefresh(){
+			this.refresh()
+		},
 		onLoad() {
 		var serverUrl = common.serverUrl
 		// 页面创建时候,创建一个临时动画对象
@@ -59,18 +62,34 @@
 				}
 			}
 		});	
+		
+		this.refresh()
+		
 		// 猜你喜欢
-		uni.request({
-			url: serverUrl+ '/index/guessULike',
-			method:'POST',
-			success: res => {
-				if(res.data.status ===200){
-					this.guessULike = res.data.data
-				}
-			},
-		});
+// 		uni.request({
+// 			url: serverUrl+ '/index/guessULike',
+// 			method:'POST',
+// 			success: res => {
+// 				if(res.data.status ===200){
+// 					this.guessULike = res.data.data
+// 				}
+// 			},
+// 		});
 		},
 		methods: {
+			refresh(){
+				var serverUrl = common.serverUrl
+				
+				uni.request({
+					url: serverUrl+ '/index/guessULike',
+					method:'POST',
+					success: res => {
+						if(res.data.status ===200){
+							this.guessULike = res.data.data
+						}
+					},
+				});				
+			},
 			// 点赞动画
 			//#ifdef APP-PLUS ||MP-WEIXIN
 			praiseMe(e){

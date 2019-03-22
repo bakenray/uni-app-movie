@@ -400,6 +400,9 @@ var _trailerStars = _interopRequireDefault(__webpack_require__(/*! ../../compone
     {}, {}, {}, {}, {}];
 
   },
+  onPullDownRefresh: function onPullDownRefresh() {
+    this.refresh();
+  },
   onLoad: function onLoad() {var _this = this;
     var serverUrl = _common.default.serverUrl;
     // 页面创建时候,创建一个临时动画对象
@@ -437,18 +440,34 @@ var _trailerStars = _interopRequireDefault(__webpack_require__(/*! ../../compone
         }
       } });
 
-    // 猜你喜欢
-    uni.request({
-      url: serverUrl + '/index/guessULike',
-      method: 'POST',
-      success: function success(res) {
-        if (res.data.status === 200) {
-          _this.guessULike = res.data.data;
-        }
-      } });
 
+    this.refresh();
+
+    // 猜你喜欢
+    // 		uni.request({
+    // 			url: serverUrl+ '/index/guessULike',
+    // 			method:'POST',
+    // 			success: res => {
+    // 				if(res.data.status ===200){
+    // 					this.guessULike = res.data.data
+    // 				}
+    // 			},
+    // 		});
   },
   methods: {
+    refresh: function refresh() {var _this2 = this;
+      var serverUrl = _common.default.serverUrl;
+
+      uni.request({
+        url: serverUrl + '/index/guessULike',
+        method: 'POST',
+        success: function success(res) {
+          if (res.data.status === 200) {
+            _this2.guessULike = res.data.data;
+          }
+        } });
+
+    },
     // 点赞动画
 
     praiseMe: function praiseMe(e) {
