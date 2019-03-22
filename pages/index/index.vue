@@ -49,16 +49,16 @@
 			
 			<view class="guess-u-like-content" v-for="(guess,gIndex) in guessULike" :key="guess.id">
 				<view class="guess-u-like-movie">
-					<!-- 封面 -->
+
 					<image :src="guess.cover" class="like-movie-cover"></image>
-					<!-- 简介 -->
+
 					<view class="movie-diretion">
 						<view class="movie-title">{{guess.name}}</view>
 						<trailerStars :innerScore="guess.score" showNum="0"></trailerStars>
 						<view class="movie-info">{{guess.basicInfo}}</view>
 						<view class="movie-info">{{guess.releaseDate}}</view>
 					</view>
-					<!-- 点赞-->
+
 					<view class="movie-oper" :data-gIndex="gIndex" @tap="praiseMe">
 						<image class="icon-praise" src="../../static/icons/icon_praise.png"></image>
 						<view class="praise-me">点赞</view>
@@ -66,7 +66,6 @@
 					</view>
 				</view>
 			</view>
-			
 		</view>
 	</view>
 </template>

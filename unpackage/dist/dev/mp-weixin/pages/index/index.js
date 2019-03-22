@@ -396,11 +396,16 @@ var _trailerStars = _interopRequireDefault(__webpack_require__(/*! ../../compone
   onUnload: function onUnload() {
     // 页面卸载时候,清空动画数据
     this.animationData = {};
+    this.animationDataArr = [
+    {}, {}, {}, {}, {}];
+
   },
   onLoad: function onLoad() {var _this = this;
     var serverUrl = _common.default.serverUrl;
     // 页面创建时候,创建一个临时动画对象
+
     this.animation = uni.createAnimation();
+
 
     // banner
     uni.request({
@@ -445,6 +450,7 @@ var _trailerStars = _interopRequireDefault(__webpack_require__(/*! ../../compone
   },
   methods: {
     // 点赞动画
+
     praiseMe: function praiseMe(e) {
       var gIndex = e.currentTarget.dataset.gindex;
       console.log(gIndex);
@@ -453,7 +459,6 @@ var _trailerStars = _interopRequireDefault(__webpack_require__(/*! ../../compone
         duration: 200 });
 
       // 导出动画数据到组件
-      // this.animationData = this.animation.export()
       this.animationData = this.animation;
       this.animationDataArr[gIndex] = this.animationData.export();
       // 还原动画
@@ -465,6 +470,7 @@ var _trailerStars = _interopRequireDefault(__webpack_require__(/*! ../../compone
         this.animationDataArr[gIndex] = this.animationData.export();
       }.bind(this), 1000);
     } },
+
 
   components: {
     trailerStars: _trailerStars.default } };exports.default = _default;

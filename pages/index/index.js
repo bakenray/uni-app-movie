@@ -17,13 +17,18 @@
 		},
 		onUnload(){
 			// 页面卸载时候,清空动画数据
-			this.animationData ={}
+			this.animationData = {}
+			this.animationDataArr = [
+				{},{},{},{},{}
+			]
 		},
 		onLoad() {
 		var serverUrl = common.serverUrl
 		// 页面创建时候,创建一个临时动画对象
+		//#ifdef APP-PLUS ||MP-WEIXIN
 		this.animation= uni.createAnimation();	
-						
+		//#endif
+				
 		// banner
 		uni.request({
 			url: serverUrl +'/index/carousel/list',
@@ -67,6 +72,7 @@
 		},
 		methods: {
 			// 点赞动画
+			//#ifdef APP-PLUS ||MP-WEIXIN
 			praiseMe(e){
 				var gIndex = e.currentTarget.dataset.gindex
 				console.log(gIndex)
@@ -75,7 +81,6 @@
 					duration:200
 				})
 				// 导出动画数据到组件
-				// this.animationData = this.animation.export()
 				this.animationData = this.animation	
 				this.animationDataArr[gIndex] = this.animationData.export()
 				// 还原动画
@@ -87,6 +92,7 @@
 					this.animationDataArr[gIndex] = this.animationData.export()
 				}.bind(this),1000)
 			}
+			//#endif
 		},
 		components:{
 			trailerStars
