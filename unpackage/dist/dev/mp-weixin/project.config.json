@@ -4,12 +4,12 @@
     "ignore": []
   },
   "setting": {
-    "urlCheck": true
+    "urlCheck": false
   },
   "compileType": "miniprogram",
   "libVersion": "",
-  "appid": "touristappid",
-  "projectname": "next-superhero-dev",
+  "appid": "wx5a1646e99e19eaef",
+  "projectname": "nest-superhero-dev",
   "condition": {
     "search": {
       "current": -1,

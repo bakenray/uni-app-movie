@@ -1,0 +1,208 @@
+
+.movie-score-wapper{
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-orient: horizontal;
+	-webkit-box-direction: normal;
+	-webkit-flex-direction: row;
+	    -ms-flex-direction: row;
+	        flex-direction: row;
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	    -ms-flex-align: center;
+	        align-items: center;
+}
+.star-g,.star-y{
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-orient: horizontal;
+	-webkit-box-direction: normal;
+	-webkit-flex-direction: row;
+	    -ms-flex-direction: row;
+	        flex-direction: row;
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	    -ms-flex-align: center;
+	        align-items: center;
+}
+.icon-star{
+	width:30rpx;
+	height:30rpx;
+}
+.movie-score{
+	font-size: 12px;
+	color:grey;
+	margin-left:10rpx;
+}
+
+.banner{
+	width:100%;
+	height:440rpx;
+}
+.title-wapper{
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	    -ms-flex-align: center;
+	        align-items: center;
+	padding:10px 20rpx;
+	margin-top:10rpx;
+}
+.super-hot,.hot-trailer{
+	padding-bottom:10rpx;
+}
+.icon-hot{
+	width:40rpx;
+	height:40rpx;
+}
+.hot-title-text{
+	font-size: 18px;
+	padding: 0 12rpx;
+	font-weight: bold;
+}
+.hot-imgs{
+	width:100%;
+	white-space:nowrap;
+}
+.single-poster{
+	display: inline-block;
+	margin-left: 20rpx;
+}
+.poster-wapper{
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	-webkit-flex-direction: column;
+	    -ms-flex-direction: column;
+	        flex-direction: column;
+}
+.poster{
+	width:200rpx;
+	height:270rpx;
+}
+.movie-name{
+	width:200rpx;	
+	margin-top:14rpx;
+	font-size: 14px;
+	font-weight: bold;
+}
+.hot-trailer-movies{
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-orient: horizontal;
+	-webkit-box-direction: normal;
+	-webkit-flex-direction: row;
+	    -ms-flex-direction: row;
+	        flex-direction: row;
+	-webkit-flex-wrap: wrap;
+	    -ms-flex-wrap: wrap;
+	        flex-wrap: wrap;
+	-webkit-box-pack: justify;
+	-webkit-justify-content: space-between;
+	    -ms-flex-pack: justify;
+	        justify-content: space-between;
+	padding:0 20rpx;
+}
+.trailer-movie-video{
+	width:350rpx;
+	height:220rpx;
+	margin-bottom: 10rpx;
+}
+.guess-u-like-list{
+	display:-webkit-box;
+	display:-webkit-flex;
+	display:-ms-flexbox;
+	display:flex;
+	-webkit-box-orient:horizontal;
+	-webkit-box-direction:normal;
+	-webkit-flex-direction:row;
+	    -ms-flex-direction:row;
+	        flex-direction:row;
+	font-size: 12px;	
+	padding-bottom:20rpx;
+	margin-bottom:20rpx;
+}
+.img-u-like{
+	width:156rpx;
+	height:204rpx;
+	-webkit-flex-shrink: 0;
+	    -ms-flex-negative: 0;
+	        flex-shrink: 0;
+	border-radius: 3px;
+	margin-left:20rpx;
+}
+.movie-desc{
+	width:320rpx;	
+	-webkit-box-flex: 1;	
+	-webkit-flex-grow: 1;	
+	    -ms-flex-positive: 1;	
+	        flex-grow: 1;
+	-webkit-flex-shrink: 1;
+	    -ms-flex-negative: 1;
+	        flex-shrink: 1;		
+	padding:0 16rpx;
+}
+.movie-desc-tit{
+	font-size: 16px;
+	margin-bottom:10rpx;
+}
+.movie-info{
+	margin:10rpx 0;
+	color:#565656;
+}
+.movie-time{
+	color:#aaa;
+}
+.movie-opr{
+	-webkit-box-flex: 1;
+	-webkit-flex-grow: 1;
+	    -ms-flex-positive: 1;
+	        flex-grow: 1;
+	-webkit-flex-shrink: 0;
+	    -ms-flex-negative: 0;
+	        flex-shrink: 0;	
+	display: -webkit-box;	
+	display: -webkit-flex;	
+	display: -ms-flexbox;	
+	display: flex;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	-webkit-flex-direction: column;
+	    -ms-flex-direction: column;
+	        flex-direction: column;
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	    -ms-flex-align: center;
+	        align-items: center;
+	-webkit-box-pack: center;
+	-webkit-justify-content: center;
+	    -ms-flex-pack: center;
+	        justify-content: center;
+	border-left: 1px dashed #ddd;
+}
+.img-thumbs-up{
+	width:30px;
+	height:30px;
+}
+.text-thumbs-up{
+	color: #ffbe34;
+}
+.animation-move{
+	font-weight: bold;
+	opacity: 0;
+}
+.animation-move-h5{
+	opacity: 1;
+}

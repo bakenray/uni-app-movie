@@ -3,10 +3,10 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"app-plus":{
-					"titleNView":false
-				},
-				"enablePullDownRefresh":true // 下拉刷新
+                "app-plus": {
+                    "titleNView": false //禁用原生导航栏
+                },
+				"enablePullDownRefresh":true
 			}
 		}
 	    ,{
@@ -14,7 +14,7 @@
             "style" : {}
         }
         ,{
-            "path" : "pages/my/my",
+            "path" : "pages/me/me",
             "style" : {}
         }
     ],
@@ -33,22 +33,21 @@
 			{
 				"pagePath":"pages/index/index",
 				"text":"首页",
-				"iconPath":"static/tabBar-icon/icon_home.png",
-				"selectedIconPath":"static/tabBar-icon/icon_home_sel.png"
+				"iconPath":"static/icon_tabbar/index.png",
+				"selectedIconPath":"static/icon_tabbar/index_sel.png"
 			},
 			{
 				"pagePath":"pages/search/search",
 				"text":"搜索",
-				"iconPath":"static/tabBar-icon/icon_search.png",
-				"selectedIconPath":"static/tabBar-icon/icon_search_sel.png"
+				"iconPath":"static/icon_tabbar/search.png",
+				"selectedIconPath":"static/icon_tabbar/search_sel.png"			
 			},
 			{
-				"pagePath":"pages/my/my",
+				"pagePath":"pages/me/me",
 				"text":"我的",
-				"iconPath":"static/tabBar-icon/icon_my.png",
-				"selectedIconPath":"static/tabBar-icon/icon_my_sel.png"
-			}
+				"iconPath":"static/icon_tabbar/me.png",
+				"selectedIconPath":"static/icon_tabbar/me_sel.png"
+			}						
 		]
-		
 	}
 }
