@@ -46,15 +46,15 @@ eval("var g;\n\n// This works in non-strict mode\ng = (function() {\n\treturn th
 
 /***/ }),
 
-/***/ "C:\\Users\\Administrator\\Desktop\\nest-superhero-dev\\pages.json":
-/*!********************************************************************!*\
-  !*** C:/Users/Administrator/Desktop/nest-superhero-dev/pages.json ***!
-  \********************************************************************/
+/***/ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\pages.json":
+/*!*************************************************************************!*\
+  !*** C:/Users/Administrator/Desktop/movie-app/uni-app-movie/pages.json ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\n//# sourceURL=C:/Users/Administrator/Desktop/nest-superhero-dev/pages.json");
+eval("\n\n//# sourceURL=C:/Users/Administrator/Desktop/movie-app/uni-app-movie/pages.json");
 
 /***/ })
 

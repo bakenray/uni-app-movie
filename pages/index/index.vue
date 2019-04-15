@@ -3,7 +3,9 @@
 		<!-- 轮播 -->
 		<swiper :indicator-dots="true" :autoplay="true" class="banner"  >
 			<swiper-item v-for="banner in bannerList" :key="banner.id">
-				<image class="banner" :src="banner.image"></image>
+				<navigator open-type="navigate" :url="'../movie/movie?trailerId=' + banner.movieId">
+					<image class="banner" :src="banner.image"></image>					
+				</navigator>	
 			</swiper-item>
 		</swiper>
 		<!-- 热门超英 -->
@@ -15,7 +17,9 @@
 			<scroll-view scroll-x="true" class="page-block hot-imgs">
 				<view class="single-poster" v-for="hot in hotList" :key="hot.id">
 					<view class="poster-wapper">
-						<image class="poster" :src="hot.cover"></image>
+						<navigator open-type="navigate" :url="'../movie/movie?trailerId=' + hot.id">
+							<image class="poster" :src="hot.cover"></image>					
+						</navigator>							
 						<view class="movie-name tit">{{hot.name}}</view>
 						<scorestar :innerScore="hot.score" showNum="1" ></scorestar>
 					</view>
@@ -35,7 +39,6 @@
 				:key="trailer.id"
 				:src="trailer.trailer"
 				:poster="trailer.poster"
-				show-play-btn="false"
 				controls
 				></video>
 			</view>
@@ -48,7 +51,10 @@
 		<view class="page-block page-guess-u-like">
 			<view class="guess-u-like-bar">
 				<view class="guess-u-like-list" v-for="(list,gindex) in guessULike" :key="list.id" >
-					<image class="img-u-like" :src="list.cover"></image>
+					<navigator open-type="navigate" :url="'../movie/movie?trailerId=' + list.id">
+						<image class="img-u-like" :src="list.cover"></image>		
+					</navigator>
+
 					<view class="movie-desc">
 						<view class="movie-desc-tit tit">{{list.name}}</view>
 						<scorestar :innerScore="list.score" showNum="0" ></scorestar>

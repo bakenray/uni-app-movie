@@ -203,6 +203,4 @@
 	font-weight: bold;
 	opacity: 0;
 }
-.animation-move-h5{
-	opacity: 1;
-}
+

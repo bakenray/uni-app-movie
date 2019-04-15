@@ -31,9 +31,30 @@ function hasOwn(obj, key) {
 
 function noop() {}
 
+/**
+                    * Create a cached version of a pure function.
+                    */
+function cached(fn) {
+  var cache = Object.create(null);
+  return function cachedFn(str) {
+    var hit = cache[str];
+    return hit || (cache[str] = fn(str));
+  };
+}
+
+/**
+   * Camelize a hyphen-delimited string.
+   */
+var camelizeRE = /-(\w)/g;
+var camelize = cached(function (str) {
+  return str.replace(camelizeRE, function (_, c) {return c ? c.toUpperCase() : '';});
+});
+
 var SYNC_API_RE = /requireNativePlugin|upx2px|hideKeyboard|canIUse|^create|Sync$|Manager$/;
 
 var CONTEXT_API_RE = /^create|Manager$/;
+
+var TASK_APIS = ['request', 'downloadFile', 'uploadFile', 'connectSocket'];
 
 var CALLBACK_API_RE = /^on/;
 
@@ -48,6 +69,10 @@ function isCallbackApi(name) {
   return CALLBACK_API_RE.test(name);
 }
 
+function isTaskApi(name) {
+  return TASK_APIS.indexOf(name) !== -1;
+}
+
 function handlePromise(promise) {
   return promise.then(function (data) {
     return [null, data];
@@ -56,10 +81,12 @@ function handlePromise(promise) {
 }
 
 function shouldPromise(name) {
-  if (isSyncApi(name)) {
-    return false;
-  }
-  if (isCallbackApi(name)) {
+  if (
+  isContextApi(name) ||
+  isSyncApi(name) ||
+  isCallbackApi(name) ||
+  isTaskApi(name))
+  {
     return false;
   }
   return true;
@@ -278,6 +305,51 @@ var api = /*#__PURE__*/Object.freeze({});
 
 
 
+var WXPage = Page;
+var WXComponent = Component;
+
+var customizeRE = /:/g;
+
+var customize = cached(function (str) {
+  return camelize(str.replace(customizeRE, '-'));
+});
+
+function initTriggerEvent(mpInstance) {
+  if (wx.canIUse('nextTick')) {// 微信旧版本基础库不支持重写triggerEvent
+    var oldTriggerEvent = mpInstance.triggerEvent;
+    mpInstance.triggerEvent = function (event) {for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {args[_key2 - 1] = arguments[_key2];}
+      return oldTriggerEvent.apply(mpInstance, [customize(event)].concat(args));
+    };
+  }
+}
+
+Page = function Page() {var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var name = 'onLoad';
+  var oldHook = options[name];
+  if (!oldHook) {
+    options[name] = function () {
+      initTriggerEvent(this);
+    };
+  } else {
+    options[name] = function () {
+      initTriggerEvent(this);for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {args[_key3] = arguments[_key3];}
+      return oldHook.apply(this, args);
+    };
+  }
+  return WXPage(options);
+};
+
+var behavior = Behavior({
+  created: function created() {
+    initTriggerEvent(this);
+  } });
+
+
+Component = function Component() {var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  (options.behaviors || (options.behaviors = [])).unshift(behavior);
+  return WXComponent(options);
+};
+
 var MOCKS = ['__route__', '__wxExparserNodeId__', '__wxWebviewId__'];
 
 function initMocks(vm) {
@@ -305,7 +377,7 @@ function getData(vueOptions, context) {
     try {
       data = data.call(context); // 支持 Vue.prototype 上挂的数据
     } catch (e) {
-      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.warn('根据 Vue 的 data 函数初始化小程序 data 失败，请尽量确保 data 函数中不访问 vm 对象，否则可能影响首次数据渲染速度。', data);
       }
     }
@@ -317,7 +389,7 @@ function getData(vueOptions, context) {
   }
 
   Object.keys(methods).forEach(function (methodName) {
-    if (!hasOwn(data, methodName)) {
+    if (context.__lifecycle_hooks__.indexOf(methodName) === -1 && !hasOwn(data, methodName)) {
       data[methodName] = methods[methodName];
     }
   });
@@ -387,31 +459,123 @@ function wrapper$1(event) {
   event.preventDefault = noop;
 
   event.target = event.target || {};
-  event.detail = event.detail || {};
+
+  if (!hasOwn(event, 'detail')) {
+    event.detail = {};
+  }
 
   // TODO 又得兼容 mpvue 的 mp 对象
   event.mp = event;
-  event.target = Object.assign({}, event.target, event.detail);
+
+  if (isPlainObject(event.detail)) {
+    event.target = Object.assign({}, event.target, event.detail);
+  }
+
   return event;
 }
 
-function processEventArgs(event) {var args = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];var isCustom = arguments.length > 2 ? arguments[2] : undefined;var methodName = arguments.length > 3 ? arguments[3] : undefined;
-  if (isCustom && !args.length) {// 无参数，直接传入 detail 数组
-    if (!Array.isArray(event.detail)) {// 应该是使用了 wxcomponent 原生组件，为了向前兼容，传递原始 event 对象
-      return [event];
+function getExtraValue(vm, dataPathsArray) {
+  var context = vm;
+  dataPathsArray.forEach(function (dataPathArray) {
+    var dataPath = dataPathArray[0];
+    var value = dataPathArray[2];
+    if (dataPath || typeof value !== 'undefined') {// ['','',index,'disable']
+      var propPath = dataPathArray[1];
+      var valuePath = dataPathArray[3];
+
+      var vFor = dataPath ? vm.__get_value(dataPath, context) : context;
+
+      if (Number.isInteger(vFor)) {
+        context = value;
+      } else if (!propPath) {
+        context = vFor[value];
+      } else {
+        if (Array.isArray(vFor)) {
+          context = vFor.find(function (vForItem) {
+            return vm.__get_value(propPath, vForItem) === value;
+          });
+        } else if (isPlainObject(vFor)) {
+          context = Object.keys(vFor).find(function (vForKey) {
+            return vm.__get_value(propPath, vFor[vForKey]) === value;
+          });
+        } else {
+          console.error('v-for 暂不支持循环数据：', vFor);
+        }
+      }
+
+      if (valuePath) {
+        context = vm.__get_value(valuePath, context);
+      }
     }
-    return event.detail;
+  });
+  return context;
+}
+
+function processEventExtra(vm, extra) {
+  var extraObj = {};
+
+  if (Array.isArray(extra) && extra.length) {
+    /**
+                                                  *[
+                                                  *    ['data.items', 'data.id', item.data.id],
+                                                  *    ['metas', 'id', meta.id]
+                                                  *],
+                                                  *[
+                                                  *    ['data.items', 'data.id', item.data.id],
+                                                  *    ['metas', 'id', meta.id]
+                                                  *],
+                                                  *'test'
+                                                  */
+    extra.forEach(function (dataPath, index) {
+      if (typeof dataPath === 'string') {
+        if (!dataPath) {// model,prop.sync
+          extraObj['$' + index] = vm;
+        } else {
+          extraObj['$' + index] = vm.__get_value(dataPath);
+        }
+      } else {
+        extraObj['$' + index] = getExtraValue(vm, dataPath);
+      }
+    });
   }
+
+  return extraObj;
+}
+
+function processEventArgs(vm, event) {var args = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];var extra = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];var isCustom = arguments.length > 4 ? arguments[4] : undefined;var methodName = arguments.length > 5 ? arguments[5] : undefined;
+  var isCustomMPEvent = false; // wxcomponent 组件，传递原始 event 对象
+  if (isCustom) {// 自定义事件
+    isCustomMPEvent = event.currentTarget &&
+    event.currentTarget.dataset &&
+    event.currentTarget.dataset.comType === 'wx';
+    if (!args.length) {// 无参数，直接传入 event 或 detail 数组
+      if (isCustomMPEvent) {
+        return [event];
+      }
+      return event.detail;
+    }
+  }
+
+  var extraObj = processEventExtra(vm, extra);
+
   var ret = [];
   args.forEach(function (arg) {
     if (arg === '$event') {
       if (methodName === '__set_model' && !isCustom) {// input v-model value
         ret.push(event.target.value);
       } else {
-        ret.push(isCustom ? event.detail[0] : event);
+        if (isCustom && !isCustomMPEvent) {
+          ret.push(event.detail[0]);
+        } else {// wxcomponent 组件或内置组件
+          ret.push(event);
+        }
       }
     } else {
-      ret.push(arg);
+      if (typeof arg === 'string' && hasOwn(extraObj, arg)) {
+        ret.push(extraObj[arg]);
+      } else {
+        ret.push(arg);
+      }
     }
   });
 
@@ -444,17 +608,26 @@ function handleEvent(event) {var _this = this;
     if (eventsArray && eventType === type) {
       eventsArray.forEach(function (eventArray) {
         var methodName = eventArray[0];
-        var handler = _this.$vm[methodName];
-        if (!isFn(handler)) {
-          throw new Error(" _vm.".concat(methodName, " is not a function"));
-        }
-        if (isOnce) {
-          if (handler.once) {
-            return;
+        if (methodName) {
+          var handler = _this.$vm[methodName];
+          if (!isFn(handler)) {
+            throw new Error(" _vm.".concat(methodName, " is not a function"));
           }
-          handler.once = true;
+          if (isOnce) {
+            if (handler.once) {
+              return;
+            }
+            handler.once = true;
+          }
+          handler.apply(_this.$vm, processEventArgs(
+          _this.$vm,
+          event,
+          eventArray[1],
+          eventArray[2],
+          isCustom,
+          methodName));
+
         }
-        handler.apply(_this.$vm, processEventArgs(event, eventArray[1], isCustom, methodName));
       });
     }
   });
@@ -468,7 +641,7 @@ function initRefs(vm) {
       var components = mpInstance.selectAllComponents('.vue-ref');
       components.forEach(function (component) {
         var ref = component.dataset.ref;
-        $refs[ref] = component.$vm;
+        $refs[ref] = component.$vm || component;
       });
       var forComponents = mpInstance.selectAllComponents('.vue-ref-in-for');
       forComponents.forEach(function (component) {
@@ -476,7 +649,7 @@ function initRefs(vm) {
         if (!$refs[ref]) {
           $refs[ref] = [];
         }
-        $refs[ref].push(component.$vm);
+        $refs[ref].push(component.$vm || component);
       });
       return $refs;
     } });
@@ -487,7 +660,8 @@ var hooks = [
 'onShow',
 'onHide',
 'onError',
-'onPageNotFound'];
+'onPageNotFound',
+'onUniNViewMessage'];
 
 
 function createApp(vm) {
@@ -518,7 +692,17 @@ function createApp(vm) {
 
   var appOptions = {
     onLaunch: function onLaunch(args) {
+      {
+        if (!wx.canIUse('nextTick')) {// 事实 上2.2.3 即可，简单使用 2.3.0 的 nextTick 判断
+          console.error('当前微信基础库版本过低，请将 微信开发者工具-详情-项目设置-调试基础库版本 更换为`2.3.0`以上');
+        }
+      }
+
       this.$vm = vm;
+
+      this.$vm.$mp = {
+        app: this };
+
 
       this.$vm._isMounted = true;
       this.$vm.__call_hook('mounted');
@@ -526,6 +710,9 @@ function createApp(vm) {
       this.$vm.__call_hook('onLaunch', args);
     } };
 
+
+  // 兼容旧版本 globalData
+  appOptions.globalData = vm.$options.globalData || {};
 
   initHooks(appOptions, hooks); // 延迟执行，因为 App 的注册在 main.js 之前，可能导致生命周期内 Vue 原型上开发者注册的属性无法访问
 
@@ -6233,7 +6420,7 @@ var patch = function(oldVnode, vnode) {
         });
         var diffData = diff(data, mpData);
         if (Object.keys(diffData).length) {
-            if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+            if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
                 console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + this._uid +
                     ']差量更新',
                     JSON.stringify(diffData));
@@ -6383,14 +6570,7 @@ function normalizeStyleBinding (bindingStyle) {
 
 /*  */
 
-
 var MP_METHODS = ['createSelectorQuery', 'createIntersectionObserver', 'selectAllComponents', 'selectComponent'];
-
-var customizeRE = /:/g;
-
-var customize = cached(function (str) {
-    return camelize(str.replace(customizeRE, '-'))
-});
 
 function getTarget(obj, path) {
     var parts = path.split('.');
@@ -6407,7 +6587,7 @@ function internalMixin(Vue) {
     Vue.prototype.$emit = function(event) {
         if (this.$mp && event) {
             //click-left,click:left => clickLeft
-            this.$mp[this.mpType]['triggerEvent'](customize(event), toArray(arguments, 1));
+            this.$mp[this.mpType]['triggerEvent'](event, toArray(arguments, 1));
         }
         return oldEmit.apply(this, arguments)
     };
@@ -6443,7 +6623,7 @@ function internalMixin(Vue) {
         return ret
     };
 
-    Vue.prototype.__set_model = function(target, value, modifiers) {
+    Vue.prototype.__set_model = function(target, key, value, modifiers) {
         if (Array.isArray(modifiers)) {
             if (modifiers.includes('trim')) {
                 value = value.trim();
@@ -6452,21 +6632,11 @@ function internalMixin(Vue) {
                 value = this._n(value);
             }
         }
-        if (target.indexOf('.') === -1) {
-            this[target] = value;
-        } else {
-            var paths = target.split('.');
-            var key = paths.pop();
-            this.$set(getTarget(this, paths.join('.')), key, value);
-        }
+        target[key] = value;
     };
 
     Vue.prototype.__set_sync = function(target, key, value) {
-        if (!target) {
-            this[key] = value;
-        } else {
-            this.$set(getTarget(this, target), key, value);
-        }
+        target[key] = value;
     };
 
     Vue.prototype.__get_orig = function(item) {
@@ -6474,6 +6644,10 @@ function internalMixin(Vue) {
             return item['$orig'] || item
         }
         return item
+    };
+
+    Vue.prototype.__get_value = function(dataPath, target) {
+        return getTarget(target || this, dataPath)
     };
 
 
@@ -6538,8 +6712,8 @@ function lifecycleMixin$1(Vue) {
                 }
             });
         }
-        
-        return oldExtend.call(this,extendOptions)
+
+        return oldExtend.call(this, extendOptions)
     };
 
     var strategies = Vue.config.optionMergeStrategies;
@@ -6547,6 +6721,8 @@ function lifecycleMixin$1(Vue) {
     LIFECYCLE_HOOKS$1.forEach(function (hook) {
         strategies[hook] = mergeHook;
     });
+
+    Vue.prototype.__lifecycle_hooks__ = LIFECYCLE_HOOKS$1;
 }
 
 /*  */
@@ -6711,10 +6887,10 @@ module.exports = g;
 
 /***/ }),
 
-/***/ "C:\\Users\\Administrator\\Desktop\\nest-superhero-dev\\common\\common.js":
-/*!**************************************************************************!*\
-  !*** C:/Users/Administrator/Desktop/nest-superhero-dev/common/common.js ***!
-  \**************************************************************************/
+/***/ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\common\\common.js":
+/*!*******************************************************************************!*\
+  !*** C:/Users/Administrator/Desktop/movie-app/uni-app-movie/common/common.js ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6727,18 +6903,18 @@ var qqId = "qq=479835313";var _default =
 
 /***/ }),
 
-/***/ "C:\\Users\\Administrator\\Desktop\\nest-superhero-dev\\main.js":
-/*!*****************************************************************!*\
-  !*** C:/Users/Administrator/Desktop/nest-superhero-dev/main.js ***!
-  \*****************************************************************/
+/***/ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\main.js":
+/*!**********************************************************************!*\
+  !*** C:/Users/Administrator/Desktop/movie-app/uni-app-movie/main.js ***!
+  \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(createApp) {__webpack_require__(/*! uni-pages */ "C:\\Users\\Administrator\\Desktop\\nest-superhero-dev\\pages.json");
+/* WEBPACK VAR INJECTION */(function(createApp) {__webpack_require__(/*! uni-pages */ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\pages.json");
 var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ "./node_modules/@dcloudio/vue-cli-plugin-uni/packages/mp-vue/dist/mp.runtime.esm.js"));
-var _App = _interopRequireDefault(__webpack_require__(/*! ./App */ "C:\\Users\\Administrator\\Desktop\\nest-superhero-dev\\App.vue"));
-var _common = _interopRequireDefault(__webpack_require__(/*! ./common/common.js */ "C:\\Users\\Administrator\\Desktop\\nest-superhero-dev\\common\\common.js"));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};var ownKeys = Object.keys(source);if (typeof Object.getOwnPropertySymbols === 'function') {ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {return Object.getOwnPropertyDescriptor(source, sym).enumerable;}));}ownKeys.forEach(function (key) {_defineProperty(target, key, source[key]);});}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}
+var _App = _interopRequireDefault(__webpack_require__(/*! ./App */ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\App.vue"));
+var _common = _interopRequireDefault(__webpack_require__(/*! ./common/common.js */ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\common\\common.js"));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};var ownKeys = Object.keys(source);if (typeof Object.getOwnPropertySymbols === 'function') {ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {return Object.getOwnPropertyDescriptor(source, sym).enumerable;}));}ownKeys.forEach(function (key) {_defineProperty(target, key, source[key]);});}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}
 
 _vue.default.prototype.$common = _common.default;
 
@@ -6754,61 +6930,78 @@ createApp(app).$mount();
 
 /***/ }),
 
-/***/ "C:\\Users\\Administrator\\Desktop\\nest-superhero-dev\\main.js?{\"page\":\"pages%2Findex%2Findex\"}":
-/*!**************************************************************************************************!*\
-  !*** C:/Users/Administrator/Desktop/nest-superhero-dev/main.js?{"page":"pages%2Findex%2Findex"} ***!
-  \**************************************************************************************************/
+/***/ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\main.js?{\"page\":\"pages%2Findex%2Findex\"}":
+/*!*******************************************************************************************************!*\
+  !*** C:/Users/Administrator/Desktop/movie-app/uni-app-movie/main.js?{"page":"pages%2Findex%2Findex"} ***!
+  \*******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(createPage) {__webpack_require__(/*! uni-pages */ "C:\\Users\\Administrator\\Desktop\\nest-superhero-dev\\pages.json");
+/* WEBPACK VAR INJECTION */(function(createPage) {__webpack_require__(/*! uni-pages */ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\pages.json");
 
 var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ "./node_modules/@dcloudio/vue-cli-plugin-uni/packages/mp-vue/dist/mp.runtime.esm.js"));
-var _index = _interopRequireDefault(__webpack_require__(/*! ./pages/index/index.vue */ "C:\\Users\\Administrator\\Desktop\\nest-superhero-dev\\pages\\index\\index.vue"));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+var _index = _interopRequireDefault(__webpack_require__(/*! ./pages/index/index.vue */ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\pages\\index\\index.vue"));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
 createPage(_index.default);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ "./node_modules/@dcloudio/uni-mp-weixin/dist/index.js")["createPage"]))
 
 /***/ }),
 
-/***/ "C:\\Users\\Administrator\\Desktop\\nest-superhero-dev\\main.js?{\"page\":\"pages%2Fme%2Fme\"}":
-/*!********************************************************************************************!*\
-  !*** C:/Users/Administrator/Desktop/nest-superhero-dev/main.js?{"page":"pages%2Fme%2Fme"} ***!
-  \********************************************************************************************/
+/***/ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\main.js?{\"page\":\"pages%2Fme%2Fme\"}":
+/*!*************************************************************************************************!*\
+  !*** C:/Users/Administrator/Desktop/movie-app/uni-app-movie/main.js?{"page":"pages%2Fme%2Fme"} ***!
+  \*************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(createPage) {__webpack_require__(/*! uni-pages */ "C:\\Users\\Administrator\\Desktop\\nest-superhero-dev\\pages.json");
+/* WEBPACK VAR INJECTION */(function(createPage) {__webpack_require__(/*! uni-pages */ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\pages.json");
 
 var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ "./node_modules/@dcloudio/vue-cli-plugin-uni/packages/mp-vue/dist/mp.runtime.esm.js"));
-var _me = _interopRequireDefault(__webpack_require__(/*! ./pages/me/me.vue */ "C:\\Users\\Administrator\\Desktop\\nest-superhero-dev\\pages\\me\\me.vue"));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+var _me = _interopRequireDefault(__webpack_require__(/*! ./pages/me/me.vue */ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\pages\\me\\me.vue"));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
 createPage(_me.default);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ "./node_modules/@dcloudio/uni-mp-weixin/dist/index.js")["createPage"]))
 
 /***/ }),
 
-/***/ "C:\\Users\\Administrator\\Desktop\\nest-superhero-dev\\main.js?{\"page\":\"pages%2Fsearch%2Fsearch\"}":
-/*!****************************************************************************************************!*\
-  !*** C:/Users/Administrator/Desktop/nest-superhero-dev/main.js?{"page":"pages%2Fsearch%2Fsearch"} ***!
-  \****************************************************************************************************/
+/***/ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\main.js?{\"page\":\"pages%2Fmovie%2Fmovie\"}":
+/*!*******************************************************************************************************!*\
+  !*** C:/Users/Administrator/Desktop/movie-app/uni-app-movie/main.js?{"page":"pages%2Fmovie%2Fmovie"} ***!
+  \*******************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(createPage) {__webpack_require__(/*! uni-pages */ "C:\\Users\\Administrator\\Desktop\\nest-superhero-dev\\pages.json");
+/* WEBPACK VAR INJECTION */(function(createPage) {__webpack_require__(/*! uni-pages */ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\pages.json");
 
 var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ "./node_modules/@dcloudio/vue-cli-plugin-uni/packages/mp-vue/dist/mp.runtime.esm.js"));
-var _search = _interopRequireDefault(__webpack_require__(/*! ./pages/search/search.vue */ "C:\\Users\\Administrator\\Desktop\\nest-superhero-dev\\pages\\search\\search.vue"));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+var _movie = _interopRequireDefault(__webpack_require__(/*! ./pages/movie/movie.vue */ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\pages\\movie\\movie.vue"));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+createPage(_movie.default);
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ "./node_modules/@dcloudio/uni-mp-weixin/dist/index.js")["createPage"]))
+
+/***/ }),
+
+/***/ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\main.js?{\"page\":\"pages%2Fsearch%2Fsearch\"}":
+/*!*********************************************************************************************************!*\
+  !*** C:/Users/Administrator/Desktop/movie-app/uni-app-movie/main.js?{"page":"pages%2Fsearch%2Fsearch"} ***!
+  \*********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(createPage) {__webpack_require__(/*! uni-pages */ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\pages.json");
+
+var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ "./node_modules/@dcloudio/vue-cli-plugin-uni/packages/mp-vue/dist/mp.runtime.esm.js"));
+var _search = _interopRequireDefault(__webpack_require__(/*! ./pages/search/search.vue */ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\pages\\search\\search.vue"));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
 createPage(_search.default);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ "./node_modules/@dcloudio/uni-mp-weixin/dist/index.js")["createPage"]))
 
 /***/ }),
 
-/***/ "C:\\Users\\Administrator\\Desktop\\nest-superhero-dev\\pages.json":
-/*!********************************************************************!*\
-  !*** C:/Users/Administrator/Desktop/nest-superhero-dev/pages.json ***!
-  \********************************************************************/
+/***/ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\pages.json":
+/*!*************************************************************************!*\
+  !*** C:/Users/Administrator/Desktop/movie-app/uni-app-movie/pages.json ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 

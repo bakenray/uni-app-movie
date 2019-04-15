@@ -7,7 +7,7 @@
     "urlCheck": false
   },
   "compileType": "miniprogram",
-  "libVersion": "",
+  "libVersion": "2.6.4",
   "appid": "wx5a1646e99e19eaef",
   "projectname": "nest-superhero-dev",
   "condition": {

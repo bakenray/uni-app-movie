@@ -1181,7 +1181,7 @@ Z([3,'../../static/icon_other/praise.png'])
 Z([3,'_view 9642d852 text-thumbs-up'])
 Z([3,'赞一下'])
 Z([[6],[[7],[3,'animationDataArr']],[[7],[3,'gindex']]])
-Z([3,'_view 9642d852 text-thumbs-up animation-move'])
+Z([a,[3,'_view 9642d852 text-thumbs-up animation-move '],[[2,'?:'],[[2,'=='],[[7],[3,'isH5ThumbsUp']],[[7],[3,'gindex']]],[1,'animation-move-h5'],[1,'']]])
 Z([3,'thumbsUp'])
 Z([3,'+1'])
 })(__WXML_GLOBAL__.ops_cached.$gwx_3);return __WXML_GLOBAL__.ops_cached.$gwx_3
@@ -1232,19 +1232,22 @@ __WXML_GLOBAL__.ops_set.$gwx=z;
 __WXML_GLOBAL__.ops_init.$gwx=true;
 var nv_require=function(){var nnm={};var nom={};return function(n){return function(){if(!nnm[n]) return undefined;try{if(!nom[n])nom[n]=nnm[n]();return nom[n];}catch(e){e.message=e.message.replace(/nv_/g,'');var tmp = e.stack.substring(0,e.stack.lastIndexOf(n));e.stack = tmp.substring(0,tmp.lastIndexOf('\n'));e.stack = e.stack.replace(/\snv_/g,' ');e.stack = $gstack(e.stack);e.stack += '\n    at ' + n.substring(2);console.error(e);}
 }}}()
-var x=['./common/slots.wxml','./components/scoreStar/scoreStar.vue.wxml','./pages/index/index.vue.wxml','/components/scoreStar/scoreStar.vue.wxml','./pages/index/index.wxml','./index.vue.wxml','./pages/me/me.vue.wxml','./pages/me/me.wxml','./me.vue.wxml','./pages/search/search.vue.wxml','./pages/search/search.wxml','./search.vue.wxml'];d_[x[0]]={}
+var x=['./common/slots.wxml','/components/scoreStar/scoreStar.vue.wxml','./components/scoreStar/scoreStar.vue.wxml','./pages/index/index.vue.wxml','./pages/index/index.wxml','./index.vue.wxml','./pages/me/me.vue.wxml','./pages/me/me.wxml','./me.vue.wxml','./pages/search/search.vue.wxml','./pages/search/search.wxml','./search.vue.wxml'];d_[x[0]]={}
 var m0=function(e,s,r,gg){
 var z=gz$gwx_1()
+var oB=e_[x[0]].i
+_ai(oB,x[1],e_,x[0],1,1)
+oB.pop()
 return r
 }
-e_[x[0]]={f:m0,j:[],i:[],ti:[],ic:[]}
-d_[x[1]]={}
-d_[x[1]]["4c465013"]=function(e,s,r,gg){
+e_[x[0]]={f:m0,j:[],i:[],ti:[x[1]],ic:[]}
+d_[x[2]]={}
+d_[x[2]]["4c465013"]=function(e,s,r,gg){
 var z=gz$gwx_2()
-var b=x[1]+':4c465013'
+var b=x[2]+':4c465013'
 r.wxVkey=b
 gg.f=$gdc(f_["./components/scoreStar/scoreStar.vue.wxml"],"",1)
-if(p_[b]){_wl(b,x[1]);return}
+if(p_[b]){_wl(b,x[2]);return}
 p_[b]=true
 try{
 cs.push("./components/scoreStar/scoreStar.vue.wxml:view:1:27")
@@ -1313,14 +1316,14 @@ var m1=function(e,s,r,gg){
 var z=gz$gwx_2()
 return r
 }
-e_[x[1]]={f:m1,j:[],i:[],ti:[],ic:[]}
-d_[x[2]]={}
-d_[x[2]]["9642d852"]=function(e,s,r,gg){
+e_[x[2]]={f:m1,j:[],i:[],ti:[],ic:[]}
+d_[x[3]]={}
+d_[x[3]]["9642d852"]=function(e,s,r,gg){
 var z=gz$gwx_3()
-var b=x[2]+':9642d852'
+var b=x[3]+':9642d852'
 r.wxVkey=b
 gg.f=$gdc(f_["./pages/index/index.vue.wxml"],"",1)
-if(p_[b]){_wl(b,x[2]);return}
+if(p_[b]){_wl(b,x[3]);return}
 p_[b]=true
 try{
 cs.push("./pages/index/index.vue.wxml:view:1:84")
@@ -1392,7 +1395,7 @@ var b3=_v()
 _(lY,b3)
 cs.push("./pages/index/index.vue.wxml:template:1:1090")
 var o4=_oz(z,33,hU,cT,gg)
-var x5=_gd(x[2],o4,e_,d_)
+var x5=_gd(x[3],o4,e_,d_)
 if(x5){
 var o6=_1z(z,32,hU,cT,gg) || {}
 var cur_globalf=gg.f
@@ -1400,7 +1403,7 @@ b3.wxXCkey=3
 x5(o6,o6,b3,gg)
 gg.f=cur_globalf
 }
-else _w(o4,x[2],1,1180)
+else _w(o4,x[3],1,1180)
 cs.pop()
 cs.pop()
 _(oX,lY)
@@ -1500,7 +1503,7 @@ var h1B=_v()
 _(oXB,h1B)
 cs.push("./pages/index/index.vue.wxml:template:1:2467")
 var o2B=_oz(z,70,tSB,aRB,gg)
-var c3B=_gd(x[2],o2B,e_,d_)
+var c3B=_gd(x[3],o2B,e_,d_)
 if(c3B){
 var o4B=_1z(z,69,tSB,aRB,gg) || {}
 var cur_globalf=gg.f
@@ -1508,7 +1511,7 @@ h1B.wxXCkey=3
 c3B(o4B,o4B,h1B,gg)
 gg.f=cur_globalf
 }
-else _w(o2B,x[2],1,2558)
+else _w(o2B,x[3],1,2558)
 cs.pop()
 cs.push("./pages/index/index.vue.wxml:view:1:2581")
 var l5B=_n('view')
@@ -1569,32 +1572,32 @@ return r
 }
 var m2=function(e,s,r,gg){
 var z=gz$gwx_3()
-var oD=e_[x[2]].i
-_ai(oD,x[3],e_,x[2],1,1)
-oD.pop()
+var fE=e_[x[3]].i
+_ai(fE,x[1],e_,x[3],1,1)
+fE.pop()
 return r
 }
-e_[x[2]]={f:m2,j:[],i:[],ti:[x[3]],ic:[]}
+e_[x[3]]={f:m2,j:[],i:[],ti:[x[1]],ic:[]}
 d_[x[4]]={}
 var m3=function(e,s,r,gg){
 var z=gz$gwx_4()
-var cF=e_[x[4]].i
-_ai(cF,x[5],e_,x[4],1,1)
-var hG=_v()
-_(r,hG)
+var hG=e_[x[4]].i
+_ai(hG,x[5],e_,x[4],1,1)
+var oH=_v()
+_(r,oH)
 cs.push("./pages/index/index.wxml:template:2:6")
-var oH=_oz(z,1,e,s,gg)
-var cI=_gd(x[4],oH,e_,d_)
-if(cI){
-var oJ=_1z(z,0,e,s,gg) || {}
+var cI=_oz(z,1,e,s,gg)
+var oJ=_gd(x[4],cI,e_,d_)
+if(oJ){
+var lK=_1z(z,0,e,s,gg) || {}
 var cur_globalf=gg.f
-hG.wxXCkey=3
-cI(oJ,oJ,hG,gg)
+oH.wxXCkey=3
+oJ(lK,lK,oH,gg)
 gg.f=cur_globalf
 }
-else _w(oH,x[4],2,18)
+else _w(cI,x[4],2,18)
 cs.pop()
-cF.pop()
+hG.pop()
 return r
 }
 e_[x[4]]={f:m3,j:[],i:[],ti:[x[5]],ic:[]}
@@ -1629,23 +1632,23 @@ e_[x[6]]={f:m4,j:[],i:[],ti:[],ic:[]}
 d_[x[7]]={}
 var m5=function(e,s,r,gg){
 var z=gz$gwx_6()
-var tM=e_[x[7]].i
-_ai(tM,x[8],e_,x[7],1,1)
-var eN=_v()
-_(r,eN)
+var eN=e_[x[7]].i
+_ai(eN,x[8],e_,x[7],1,1)
+var bO=_v()
+_(r,bO)
 cs.push("./pages/me/me.wxml:template:2:6")
-var bO=_oz(z,1,e,s,gg)
-var oP=_gd(x[7],bO,e_,d_)
-if(oP){
-var xQ=_1z(z,0,e,s,gg) || {}
+var oP=_oz(z,1,e,s,gg)
+var xQ=_gd(x[7],oP,e_,d_)
+if(xQ){
+var oR=_1z(z,0,e,s,gg) || {}
 var cur_globalf=gg.f
-eN.wxXCkey=3
-oP(xQ,xQ,eN,gg)
+bO.wxXCkey=3
+xQ(oR,oR,bO,gg)
 gg.f=cur_globalf
 }
-else _w(bO,x[7],2,18)
+else _w(oP,x[7],2,18)
 cs.pop()
-tM.pop()
+eN.pop()
 return r
 }
 e_[x[7]]={f:m5,j:[],i:[],ti:[x[8]],ic:[]}
@@ -1680,23 +1683,23 @@ e_[x[9]]={f:m6,j:[],i:[],ti:[],ic:[]}
 d_[x[10]]={}
 var m7=function(e,s,r,gg){
 var z=gz$gwx_8()
-var cT=e_[x[10]].i
-_ai(cT,x[11],e_,x[10],1,1)
-var hU=_v()
-_(r,hU)
+var hU=e_[x[10]].i
+_ai(hU,x[11],e_,x[10],1,1)
+var oV=_v()
+_(r,oV)
 cs.push("./pages/search/search.wxml:template:2:6")
-var oV=_oz(z,1,e,s,gg)
-var cW=_gd(x[10],oV,e_,d_)
-if(cW){
-var oX=_1z(z,0,e,s,gg) || {}
+var cW=_oz(z,1,e,s,gg)
+var oX=_gd(x[10],cW,e_,d_)
+if(oX){
+var lY=_1z(z,0,e,s,gg) || {}
 var cur_globalf=gg.f
-hU.wxXCkey=3
-cW(oX,oX,hU,gg)
+oV.wxXCkey=3
+oX(lY,lY,oV,gg)
 gg.f=cur_globalf
 }
-else _w(oV,x[10],2,18)
+else _w(cW,x[10],2,18)
 cs.pop()
-cT.pop()
+hU.pop()
 return r
 }
 e_[x[10]]={f:m7,j:[],i:[],ti:[x[11]],ic:[]}
@@ -1827,7 +1830,7 @@ setCssToHead([])();setCssToHead([[2,0]],undefined,{path:"./app.wxss"})();
 __wxAppCode__['app.wxss']=setCssToHead([[2,0]],undefined,{path:"./app.wxss"});    
 __wxAppCode__['app.wxml']=$gwx('./app.wxml');
 
-__wxAppCode__['pages/index/index.wxss']=setCssToHead([".",[1],"movie-score-wapper{ display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; -webkit-box-orient: horizontal; -webkit-box-direction: normal; -webkit-flex-direction: row; -ms-flex-direction: row; flex-direction: row; -webkit-box-align: center; -webkit-align-items: center; -ms-flex-align: center; align-items: center; }\n.",[1],"star-g,.",[1],"star-y{ display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; -webkit-box-orient: horizontal; -webkit-box-direction: normal; -webkit-flex-direction: row; -ms-flex-direction: row; flex-direction: row; -webkit-box-align: center; -webkit-align-items: center; -ms-flex-align: center; align-items: center; }\n.",[1],"icon-star{ width:",[0,30],"; height:",[0,30],"; }\n.",[1],"movie-score{ font-size: 12px; color:grey; margin-left:",[0,10],"; }\n.",[1],"banner{ width:100%; height:",[0,440],"; }\n.",[1],"title-wapper{ display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; -webkit-box-align: center; -webkit-align-items: center; -ms-flex-align: center; align-items: center; padding:10px ",[0,20],"; margin-top:",[0,10],"; }\n.",[1],"super-hot,.",[1],"hot-trailer{ padding-bottom:",[0,10],"; }\n.",[1],"icon-hot{ width:",[0,40],"; height:",[0,40],"; }\n.",[1],"hot-title-text{ font-size: 18px; padding: 0 ",[0,12],"; font-weight: bold; }\n.",[1],"hot-imgs{ width:100%; white-space:nowrap; }\n.",[1],"single-poster{ display: inline-block; margin-left: ",[0,20],"; }\n.",[1],"poster-wapper{ display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; -webkit-box-orient: vertical; -webkit-box-direction: normal; -webkit-flex-direction: column; -ms-flex-direction: column; flex-direction: column; }\n.",[1],"poster{ width:",[0,200],"; height:",[0,270],"; }\n.",[1],"movie-name{ width:",[0,200],"; margin-top:",[0,14],"; font-size: 14px; font-weight: bold; }\n.",[1],"hot-trailer-movies{ display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; -webkit-box-orient: horizontal; -webkit-box-direction: normal; -webkit-flex-direction: row; -ms-flex-direction: row; flex-direction: row; -webkit-flex-wrap: wrap; -ms-flex-wrap: wrap; flex-wrap: wrap; -webkit-box-pack: justify; -webkit-justify-content: space-between; -ms-flex-pack: justify; justify-content: space-between; padding:0 ",[0,20],"; }\n.",[1],"trailer-movie-video{ width:",[0,350],"; height:",[0,220],"; margin-bottom: ",[0,10],"; }\n.",[1],"guess-u-like-list{ display:-webkit-box; display:-webkit-flex; display:-ms-flexbox; display:flex; -webkit-box-orient:horizontal; -webkit-box-direction:normal; -webkit-flex-direction:row; -ms-flex-direction:row; flex-direction:row; font-size: 12px; padding-bottom:",[0,20],"; margin-bottom:",[0,20],"; }\n.",[1],"img-u-like{ width:",[0,156],"; height:",[0,204],"; -webkit-flex-shrink: 0; -ms-flex-negative: 0; flex-shrink: 0; border-radius: 3px; margin-left:",[0,20],"; }\n.",[1],"movie-desc{ width:",[0,320],"; -webkit-box-flex: 1; -webkit-flex-grow: 1; -ms-flex-positive: 1; flex-grow: 1; -webkit-flex-shrink: 1; -ms-flex-negative: 1; flex-shrink: 1; padding:0 ",[0,16],"; }\n.",[1],"movie-desc-tit{ font-size: 16px; margin-bottom:",[0,10],"; }\n.",[1],"movie-info{ margin:",[0,10]," 0; color:#565656; }\n.",[1],"movie-time{ color:#aaa; }\n.",[1],"movie-opr{ -webkit-box-flex: 1; -webkit-flex-grow: 1; -ms-flex-positive: 1; flex-grow: 1; -webkit-flex-shrink: 0; -ms-flex-negative: 0; flex-shrink: 0; display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; -webkit-box-orient: vertical; -webkit-box-direction: normal; -webkit-flex-direction: column; -ms-flex-direction: column; flex-direction: column; -webkit-box-align: center; -webkit-align-items: center; -ms-flex-align: center; align-items: center; -webkit-box-pack: center; -webkit-justify-content: center; -ms-flex-pack: center; justify-content: center; border-left: 1px dashed #ddd; }\n.",[1],"img-thumbs-up{ width:30px; height:30px; }\n.",[1],"text-thumbs-up{ color: #ffbe34; }\n.",[1],"animation-move{ font-weight: bold; opacity: 0; }\n.",[1],"animation-move-h5{ opacity: 1; }\n",],undefined,{path:"./pages/index/index.wxss"});    
+__wxAppCode__['pages/index/index.wxss']=setCssToHead([".",[1],"movie-score-wapper{ display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; -webkit-box-orient: horizontal; -webkit-box-direction: normal; -webkit-flex-direction: row; -ms-flex-direction: row; flex-direction: row; -webkit-box-align: center; -webkit-align-items: center; -ms-flex-align: center; align-items: center; }\n.",[1],"star-g,.",[1],"star-y{ display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; -webkit-box-orient: horizontal; -webkit-box-direction: normal; -webkit-flex-direction: row; -ms-flex-direction: row; flex-direction: row; -webkit-box-align: center; -webkit-align-items: center; -ms-flex-align: center; align-items: center; }\n.",[1],"icon-star{ width:",[0,30],"; height:",[0,30],"; }\n.",[1],"movie-score{ font-size: 12px; color:grey; margin-left:",[0,10],"; }\n.",[1],"banner{ width:100%; height:",[0,440],"; }\n.",[1],"title-wapper{ display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; -webkit-box-align: center; -webkit-align-items: center; -ms-flex-align: center; align-items: center; padding:10px ",[0,20],"; margin-top:",[0,10],"; }\n.",[1],"super-hot,.",[1],"hot-trailer{ padding-bottom:",[0,10],"; }\n.",[1],"icon-hot{ width:",[0,40],"; height:",[0,40],"; }\n.",[1],"hot-title-text{ font-size: 18px; padding: 0 ",[0,12],"; font-weight: bold; }\n.",[1],"hot-imgs{ width:100%; white-space:nowrap; }\n.",[1],"single-poster{ display: inline-block; margin-left: ",[0,20],"; }\n.",[1],"poster-wapper{ display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; -webkit-box-orient: vertical; -webkit-box-direction: normal; -webkit-flex-direction: column; -ms-flex-direction: column; flex-direction: column; }\n.",[1],"poster{ width:",[0,200],"; height:",[0,270],"; }\n.",[1],"movie-name{ width:",[0,200],"; margin-top:",[0,14],"; font-size: 14px; font-weight: bold; }\n.",[1],"hot-trailer-movies{ display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; -webkit-box-orient: horizontal; -webkit-box-direction: normal; -webkit-flex-direction: row; -ms-flex-direction: row; flex-direction: row; -webkit-flex-wrap: wrap; -ms-flex-wrap: wrap; flex-wrap: wrap; -webkit-box-pack: justify; -webkit-justify-content: space-between; -ms-flex-pack: justify; justify-content: space-between; padding:0 ",[0,20],"; }\n.",[1],"trailer-movie-video{ width:",[0,350],"; height:",[0,220],"; margin-bottom: ",[0,10],"; }\n.",[1],"guess-u-like-list{ display:-webkit-box; display:-webkit-flex; display:-ms-flexbox; display:flex; -webkit-box-orient:horizontal; -webkit-box-direction:normal; -webkit-flex-direction:row; -ms-flex-direction:row; flex-direction:row; font-size: 12px; padding-bottom:",[0,20],"; margin-bottom:",[0,20],"; }\n.",[1],"img-u-like{ width:",[0,156],"; height:",[0,204],"; -webkit-flex-shrink: 0; -ms-flex-negative: 0; flex-shrink: 0; border-radius: 3px; margin-left:",[0,20],"; }\n.",[1],"movie-desc{ width:",[0,320],"; -webkit-box-flex: 1; -webkit-flex-grow: 1; -ms-flex-positive: 1; flex-grow: 1; -webkit-flex-shrink: 1; -ms-flex-negative: 1; flex-shrink: 1; padding:0 ",[0,16],"; }\n.",[1],"movie-desc-tit{ font-size: 16px; margin-bottom:",[0,10],"; }\n.",[1],"movie-info{ margin:",[0,10]," 0; color:#565656; }\n.",[1],"movie-time{ color:#aaa; }\n.",[1],"movie-opr{ -webkit-box-flex: 1; -webkit-flex-grow: 1; -ms-flex-positive: 1; flex-grow: 1; -webkit-flex-shrink: 0; -ms-flex-negative: 0; flex-shrink: 0; display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; -webkit-box-orient: vertical; -webkit-box-direction: normal; -webkit-flex-direction: column; -ms-flex-direction: column; flex-direction: column; -webkit-box-align: center; -webkit-align-items: center; -ms-flex-align: center; align-items: center; -webkit-box-pack: center; -webkit-justify-content: center; -ms-flex-pack: center; justify-content: center; border-left: 1px dashed #ddd; }\n.",[1],"img-thumbs-up{ width:30px; height:30px; }\n.",[1],"text-thumbs-up{ color: #ffbe34; }\n.",[1],"animation-move{ font-weight: bold; opacity: 0; }\n",],undefined,{path:"./pages/index/index.wxss"});    
 __wxAppCode__['pages/index/index.wxml']=$gwx('./pages/index/index.wxml');
 
 __wxAppCode__['pages/me/me.wxss']=undefined;    
