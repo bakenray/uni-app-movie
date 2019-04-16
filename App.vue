@@ -37,5 +37,17 @@
 		overflow: hidden;
 		text-overflow: ellipsis;		
 	}
-	
+	.line-wapper{
+		padding:20upx;
+		background: #f7f4f9;
+	}
+	.line{
+		height: 1px;
+		background: #ddd;
+	}	
+	.title-1{
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
 </style>

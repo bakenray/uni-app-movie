@@ -74,7 +74,7 @@
 			showTrailer(e){
 				let trailerId  = e.currentTarget.dataset.trailerid
 				uni.navigateTo({
-					url:'../movie/movie?trailerId='+trailerId
+					url:'../movie/movie?trailerId='+ trailerId
 				})
 			}
 		},

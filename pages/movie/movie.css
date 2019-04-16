@@ -7,3 +7,112 @@
 	width:100%;
 	height:440upx;
 }
+
+.movie-info{
+	 display: flex;
+	 flex-direction: row;
+	 background:#f7f4f9;
+	 padding:40upx 20upx;
+}
+.cover{
+	width:280upx;
+	height:380upx;
+}
+.movie-desc{
+	flex-direction: column;
+	margin-left: 38upx;
+}
+.movie-desc-tit{
+	font-size: 24px;
+	padding-bottom:10px;
+}
+.basic-info{
+	color:grey;
+	font-size: 13px;
+	line-height: 36upx;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.score-block{
+	background: #fbfbfb;
+	margin-top:20upx;
+	width:100%;
+	height:auto;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	padding:20upx;
+	box-shadow: 0 5px 12px rgba(0,0,0,.05);
+	border-radius: 2px;
+	}
+
+.big-score{
+	margin-right:30upx;
+	text-align: center;
+}
+.score-words{
+	font-size: 12px;
+	color:grey;
+}
+.movie-score{
+	font-size: 26px;
+	font-weight: bold;
+	color:#FEAB2A;
+	line-height: 60upx;
+	padding:10upx 0;
+}
+.prise-counts{
+	font-size: 12px;
+	color:grey;
+	line-height:44upx ;
+	padding:10upx 0;
+}
+.plots-block{
+	background-color:#f7f4f9;
+	padding:20upx;
+}
+.plots-title{
+	color: #565656;
+	font-size: 14px;
+}
+.plots-desc{
+	margin-top:10px;
+	font-size: 12px;	
+}
+
+.scroll-block{
+	background-color:#f7f4f9;	
+	padding:20upx;
+}
+.scroll-list{
+	width:100%;
+	white-space: nowrap;
+	margin-top:20upx;
+}
+.plot-image{
+	width:220upx;
+	height:320upx;
+	margin-right:10upx;
+}
+.actor-image{
+	width:170upx;
+	height:240upx;
+	margin-right: 10upx;
+}
+.actor-waaper{
+	display: inline-block;
+}
+
+.actor-name{
+	width:170upx;
+	text-align: left;
+	font-size: 14px;
+	padding-bottom:5upx;
+}
+.actor-role{
+	width:170upx;
+	text-align: left;
+	font-size: 12px;
+	color:#AAAAAA;
+}
