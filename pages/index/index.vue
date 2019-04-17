@@ -34,6 +34,9 @@
 		<view class="page-block hot-trailer">
 			<view class="hot-trailer-movies">
 				<video 
+				:id="trailer.id"
+				:data-playingIndex = "trailer.id"
+				@play="meIsPlaying"
 				class="trailer-movie-video"
 				v-for="trailer in trailerList"
 				:key="trailer.id"
@@ -89,7 +92,27 @@
 		components:{
 			scorestar
 		},
+		onHide(){
+			if(this.videoContext){
+				this.videoContext.pause()
+			}
+		},
 		methods:{
+			meIsPlaying(e){
+				let trailerId = ''
+				if(e){
+					trailerId = e.currentTarget.dataset.playingindex
+					this.videoContext = uni.createVideoContext(trailerId)
+				}
+				let trailerList = this.trailerList
+				for(var i =0; i<trailerList.length;i++){
+					let tempId = trailerList[i].id
+					if(tempId != trailerId){
+						uni.createVideoContext(tempId).pause()
+					}
+				}
+			},
+			
 			// 点赞函数
 			praiseMe(e){
 			let gIndex = e.currentTarget.dataset.gindex

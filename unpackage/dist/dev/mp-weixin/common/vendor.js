@@ -54,8 +54,6 @@ var SYNC_API_RE = /requireNativePlugin|upx2px|hideKeyboard|canIUse|^create|Sync$
 
 var CONTEXT_API_RE = /^create|Manager$/;
 
-var TASK_APIS = ['request', 'downloadFile', 'uploadFile', 'connectSocket'];
-
 var CALLBACK_API_RE = /^on/;
 
 function isContextApi(name) {
@@ -69,10 +67,6 @@ function isCallbackApi(name) {
   return CALLBACK_API_RE.test(name);
 }
 
-function isTaskApi(name) {
-  return TASK_APIS.indexOf(name) !== -1;
-}
-
 function handlePromise(promise) {
   return promise.then(function (data) {
     return [null, data];
@@ -84,8 +78,7 @@ function shouldPromise(name) {
   if (
   isContextApi(name) ||
   isSyncApi(name) ||
-  isCallbackApi(name) ||
-  isTaskApi(name))
+  isCallbackApi(name))
   {
     return false;
   }
@@ -305,8 +298,8 @@ var api = /*#__PURE__*/Object.freeze({});
 
 
 
-var WXPage = Page;
-var WXComponent = Component;
+var MPPage = Page;
+var MPComponent = Component;
 
 var customizeRE = /:/g;
 
@@ -315,12 +308,15 @@ var customize = cached(function (str) {
 });
 
 function initTriggerEvent(mpInstance) {
-  if (wx.canIUse('nextTick')) {// 微信旧版本基础库不支持重写triggerEvent
-    var oldTriggerEvent = mpInstance.triggerEvent;
-    mpInstance.triggerEvent = function (event) {for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {args[_key2 - 1] = arguments[_key2];}
-      return oldTriggerEvent.apply(mpInstance, [customize(event)].concat(args));
-    };
+  {
+    if (!wx.canIUse('nextTick')) {
+      return;
+    }
   }
+  var oldTriggerEvent = mpInstance.triggerEvent;
+  mpInstance.triggerEvent = function (event) {for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {args[_key2 - 1] = arguments[_key2];}
+    return oldTriggerEvent.apply(mpInstance, [customize(event)].concat(args));
+  };
 }
 
 Page = function Page() {var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -336,7 +332,7 @@ Page = function Page() {var options = arguments.length > 0 && arguments[0] !== u
       return oldHook.apply(this, args);
     };
   }
-  return WXPage(options);
+  return MPPage(options);
 };
 
 var behavior = Behavior({
@@ -347,10 +343,10 @@ var behavior = Behavior({
 
 Component = function Component() {var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   (options.behaviors || (options.behaviors = [])).unshift(behavior);
-  return WXComponent(options);
+  return MPComponent(options);
 };
 
-var MOCKS = ['__route__', '__wxExparserNodeId__', '__wxWebviewId__'];
+var MOCKS = ['__route__', '__wxExparserNodeId__', '__wxWebviewId__', '__webviewId__'];
 
 function initMocks(vm) {
   var mpInstance = vm.$mp[vm.mpType];
@@ -377,7 +373,7 @@ function getData(vueOptions, context) {
     try {
       data = data.call(context); // 支持 Vue.prototype 上挂的数据
     } catch (e) {
-      if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.warn('根据 Vue 的 data 函数初始化小程序 data 失败，请尽量确保 data 函数中不访问 vm 对象，否则可能影响首次数据渲染速度。', data);
       }
     }
@@ -552,7 +548,7 @@ function processEventArgs(vm, event) {var args = arguments.length > 2 && argumen
       if (isCustomMPEvent) {
         return [event];
       }
-      return event.detail;
+      return event.detail.__args__ || event.detail;
     }
   }
 
@@ -565,7 +561,7 @@ function processEventArgs(vm, event) {var args = arguments.length > 2 && argumen
         ret.push(event.target.value);
       } else {
         if (isCustom && !isCustomMPEvent) {
-          ret.push(event.detail[0]);
+          ret.push(event.detail.__args__[0]);
         } else {// wxcomponent 组件或内置组件
           ret.push(event);
         }
@@ -637,7 +633,7 @@ function initRefs(vm) {
   var mpInstance = vm.$mp[vm.mpType];
   Object.defineProperty(vm, '$refs', {
     get: function get() {
-      var $refs = Object.create(null);
+      var $refs = {};
       var components = mpInstance.selectAllComponents('.vue-ref');
       components.forEach(function (component) {
         var ref = component.dataset.ref;
@@ -657,12 +653,28 @@ function initRefs(vm) {
 }
 
 var hooks = [
-'onShow',
 'onHide',
 'onError',
 'onPageNotFound',
 'onUniNViewMessage'];
 
+
+function initVm(vm) {
+  if (this.$vm) {// 百度竟然 onShow 在 onLaunch 之前？
+    return;
+  }
+  {
+    if (!wx.canIUse('nextTick')) {// 事实 上2.2.3 即可，简单使用 2.3.0 的 nextTick 判断
+      console.error('当前微信基础库版本过低，请将 微信开发者工具-详情-项目设置-调试基础库版本 更换为`2.3.0`以上');
+    }
+  }
+
+  this.$vm = vm;
+
+  this.$vm.$mp = {
+    app: this };
+
+}
 
 function createApp(vm) {
   // 外部初始化时 Vue 还未初始化，放到 createApp 内部初始化 mixin
@@ -680,7 +692,9 @@ function createApp(vm) {
       delete this.$options.mpInstance;
 
       if (this.mpType !== 'app') {
-        initRefs(this);
+        {// 头条的 selectComponent 竟然是异步的
+          initRefs(this);
+        }
         initMocks(this);
       }
     },
@@ -692,22 +706,17 @@ function createApp(vm) {
 
   var appOptions = {
     onLaunch: function onLaunch(args) {
-      {
-        if (!wx.canIUse('nextTick')) {// 事实 上2.2.3 即可，简单使用 2.3.0 的 nextTick 判断
-          console.error('当前微信基础库版本过低，请将 微信开发者工具-详情-项目设置-调试基础库版本 更换为`2.3.0`以上');
-        }
-      }
-
-      this.$vm = vm;
-
-      this.$vm.$mp = {
-        app: this };
-
+      initVm.call(this, vm);
 
       this.$vm._isMounted = true;
       this.$vm.__call_hook('mounted');
 
       this.$vm.__call_hook('onLaunch', args);
+    },
+    onShow: function onShow(args) {
+      initVm.call(this, vm);
+
+      this.$vm.__call_hook('onShow', args);
     } };
 
 
@@ -759,6 +768,20 @@ var hooks$1 = [
 'onNavigationBarSearchInputClicked'];
 
 
+function initVm$1(VueComponent) {// 百度的 onLoad 触发在 attached 之前
+  if (this.$vm) {
+    return;
+  }
+
+  this.$vm = new VueComponent({
+    mpType: 'page',
+    mpInstance: this });
+
+
+  this.$vm.__call_hook('created');
+  this.$vm.$mount();
+}
+
 function createPage(vueOptions) {
   vueOptions = vueOptions.default || vueOptions;
   var VueComponent;
@@ -776,14 +799,7 @@ function createPage(vueOptions) {
     data: getData(vueOptions, _vue.default.prototype),
     lifetimes: { // 当页面作为组件时
       attached: function attached() {
-
-        this.$vm = new VueComponent({
-          mpType: 'page',
-          mpInstance: this });
-
-
-        this.$vm.__call_hook('created');
-        this.$vm.$mount();
+        initVm$1.call(this, VueComponent);
       },
       ready: function ready() {
         this.$vm.__call_hook('beforeMount');
@@ -797,6 +813,7 @@ function createPage(vueOptions) {
 
     methods: { // 作为页面时
       onLoad: function onLoad(args) {
+        initVm$1.call(this, VueComponent);
         this.$vm.$mp.query = args; // 又要兼容 mpvue
         this.$vm.__call_hook('onLoad', args); // 开发者可能会在 onLoad 时赋值，提前到 mount 之前
       },
@@ -813,31 +830,31 @@ function createPage(vueOptions) {
   return Component(pageOptions);
 }
 
-function initVueComponent(mpInstace, VueComponent) {var extraOptions = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  if (mpInstace.$vm) {
+function initVm$2(VueComponent) {
+  if (this.$vm) {
     return;
   }
 
-  var options = Object.assign({
+  var options = {
     mpType: 'component',
-    mpInstance: mpInstace,
-    propsData: mpInstace.properties },
-  extraOptions);
+    mpInstance: this,
+    propsData: this.properties };
+
   // 初始化 vue 实例
-  mpInstace.$vm = new VueComponent(options);
+  this.$vm = new VueComponent(options);
 
   // 处理$slots,$scopedSlots（暂不支持动态变化$slots）
-  var vueSlots = mpInstace.properties.vueSlots;
+  var vueSlots = this.properties.vueSlots;
   if (Array.isArray(vueSlots) && vueSlots.length) {
     var $slots = Object.create(null);
     vueSlots.forEach(function (slotName) {
       $slots[slotName] = true;
     });
-    mpInstace.$vm.$scopedSlots = mpInstace.$vm.$slots = $slots;
+    this.$vm.$scopedSlots = this.$vm.$slots = $slots;
   }
   // 性能优先，mount 提前到 attached 中，保证组件首次渲染数据被合并
   // 导致与标准 Vue 的差异，data 和 computed 中不能使用$parent，provide等组件属性
-  mpInstace.$vm.$mount();
+  this.$vm.$mount();
 }
 
 function createComponent(vueOptions) {
@@ -856,10 +873,10 @@ function createComponent(vueOptions) {
     properties: properties,
     lifetimes: {
       attached: function attached() {
-        initVueComponent(this, VueComponent);
+        initVm$2.call(this, VueComponent);
       },
       ready: function ready() {
-        initVueComponent(this, VueComponent); // 目前发现部分情况小程序 attached 不触发
+        initVm$2.call(this, VueComponent); // 目前发现部分情况小程序 attached 不触发
         triggerLink(this); // 处理 parent,children
 
         // 补充生命周期
@@ -6420,7 +6437,7 @@ var patch = function(oldVnode, vnode) {
         });
         var diffData = diff(data, mpData);
         if (Object.keys(diffData).length) {
-            if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+            if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
                 console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + this._uid +
                     ']差量更新',
                     JSON.stringify(diffData));
@@ -6574,10 +6591,14 @@ var MP_METHODS = ['createSelectorQuery', 'createIntersectionObserver', 'selectAl
 
 function getTarget(obj, path) {
     var parts = path.split('.');
-    if (parts.length === 1) {
-        return obj[parts[0]]
+    var key = parts[0];
+    if (key.indexOf('__$n') === 0) { //number index
+        key = parseInt(key.replace('__$n', ''));
     }
-    return getTarget(obj[parts[0]], parts.slice(1).join('.'))
+    if (parts.length === 1) {
+        return obj[key]
+    }
+    return getTarget(obj[key], parts.slice(1).join('.'))
 }
 
 function internalMixin(Vue) {
@@ -6586,8 +6607,9 @@ function internalMixin(Vue) {
 
     Vue.prototype.$emit = function(event) {
         if (this.$mp && event) {
-            //click-left,click:left => clickLeft
-            this.$mp[this.mpType]['triggerEvent'](event, toArray(arguments, 1));
+            this.$mp[this.mpType]['triggerEvent'](event, {
+                __args__: toArray(arguments, 1)
+            });
         }
         return oldEmit.apply(this, arguments)
     };
@@ -6927,6 +6949,23 @@ _App.default));
 
 createApp(app).$mount();
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ "./node_modules/@dcloudio/uni-mp-weixin/dist/index.js")["createApp"]))
+
+/***/ }),
+
+/***/ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\main.js?{\"page\":\"pages%2Fcover%2Fcover\"}":
+/*!*******************************************************************************************************!*\
+  !*** C:/Users/Administrator/Desktop/movie-app/uni-app-movie/main.js?{"page":"pages%2Fcover%2Fcover"} ***!
+  \*******************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(createPage) {__webpack_require__(/*! uni-pages */ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\pages.json");
+
+var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ "./node_modules/@dcloudio/vue-cli-plugin-uni/packages/mp-vue/dist/mp.runtime.esm.js"));
+var _cover = _interopRequireDefault(__webpack_require__(/*! ./pages/cover/cover.vue */ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\pages\\cover\\cover.vue"));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+createPage(_cover.default);
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ "./node_modules/@dcloudio/uni-mp-weixin/dist/index.js")["createPage"]))
 
 /***/ }),
 

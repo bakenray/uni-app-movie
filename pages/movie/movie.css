@@ -45,17 +45,18 @@
 	padding:20upx;
 	box-shadow: 0 5px 12px rgba(0,0,0,.05);
 	border-radius: 2px;
+	box-sizing:border-box;
 	}
 
 .big-score{
-	margin-right:30upx;
+	padding-right:30upx;
 	text-align: center;
 }
 .score-words{
 	font-size: 12px;
 	color:grey;
 }
-.movie-score{
+.movie-score-big{
 	font-size: 26px;
 	font-weight: bold;
 	color:#FEAB2A;

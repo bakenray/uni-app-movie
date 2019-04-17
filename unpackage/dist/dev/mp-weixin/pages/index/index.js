@@ -84,6 +84,9 @@
 
 
 
+
+
+
 {
   data: function data() {
     return {
@@ -99,7 +102,27 @@
   components: {
     scorestar: scorestar },
 
+  onHide: function onHide() {
+    if (this.videoContext) {
+      this.videoContext.pause();
+    }
+  },
   methods: {
+    meIsPlaying: function meIsPlaying(e) {
+      var trailerId = '';
+      if (e) {
+        trailerId = e.currentTarget.dataset.playingindex;
+        this.videoContext = uni.createVideoContext(trailerId);
+      }
+      var trailerList = this.trailerList;
+      for (var i = 0; i < trailerList.length; i++) {
+        var tempId = trailerList[i].id;
+        if (tempId != trailerId) {
+          uni.createVideoContext(tempId).pause();
+        }
+      }
+    },
+
     // 点赞函数
     praiseMe: function praiseMe(e) {var _this = this;
       var gIndex = e.currentTarget.dataset.gindex;

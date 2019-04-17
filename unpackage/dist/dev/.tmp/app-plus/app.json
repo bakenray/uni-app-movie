@@ -2,7 +2,9 @@
   "pages": [
     "pages/index/index",
     "pages/search/search",
-    "pages/me/me"
+    "pages/me/me",
+    "pages/movie/movie",
+    "pages/cover/cover"
   ],
   "subPackages": [],
   "window": {
@@ -43,5 +45,5 @@
     "autoclose": false
   },
   "appname": "nest-superhero-dev",
-  "compilerVersion": "1.8.2"
+  "compilerVersion": "1.9.1"
 }

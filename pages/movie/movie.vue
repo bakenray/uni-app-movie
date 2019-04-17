@@ -3,6 +3,7 @@
 		<!-- 视频播放 -->
 		<view class="player">
 			<video 
+				id="myVideo"
 				class="movie-video"
 				:src="trailerInfo.trailer"
 				:poster="trailerInfo.poster"
@@ -12,7 +13,10 @@
 		</view>
 		<!-- 影片基本信息 -->
 		<view class="movie-info">
-			<image :src="trailerInfo.cover" class="cover"></image>
+			<navigator :url="'../cover/cover?cover=' + trailerInfo.cover">
+				<image :src="trailerInfo.cover" class="cover"></image>				
+			</navigator>
+
 			<view class="movie-desc">
 				<view class="movie-desc-tit">{{trailerInfo.name}}</view>
 				<view class="basic-info">{{trailerInfo.basicInfo}}</view>
@@ -22,7 +26,7 @@
 				<view class="score-block">
 					<view class="big-score">
 						<view class="score-words">综合评分</view>
-						<view class="movie-score">{{trailerInfo.score}}</view>
+						<view class="movie-score-big">{{trailerInfo.score}}</view>
 					</view>
 					<view class="score-stars">
 						<block v-if="trailerInfo.score>=0">
@@ -109,7 +113,7 @@ import scorestar from '@/components/scoreStar/scoreStar.vue'
 				trailerInfo:{},
 				plotPicsArray:[],
 				directorArray:[],
-				actorArray:[],
+				actorArray:[]
 			}
 		},
 		components:{
@@ -188,7 +192,46 @@ import scorestar from '@/components/scoreStar/scoreStar.vue'
 			});													
 		},
 		onReady(){
-			uni.hideLoading()
+			uni.hideLoading()	
+			this.videoContext = uni.createVideoContext('myVideo')
+		},
+		onHide(){
+			this.videoContext.pause()
+		},
+		onShow(){
+// 			if(this.videoContext){
+// 				this.videoContext.play()
+// 			}	
+		},
+		// 只支持小程序端
+		onShareAppMessage(res){
+			return{
+				title:'this.trailerInfo.name',
+				path:'/pages/movie/movie?trailerId=' + this.trailerInfo.id
+			}
+		},
+		onNavigationBarButtonTap(e){
+			
+			let trailerInfo  = this.trailerInfo
+			let trailerId = trailerInfo.id
+			let trailerName = trailerInfo.name			
+			let cover = trailerInfo.cover	
+			let poster = trailerInfo.poster
+				
+			if(e.index ==0){
+				uni.share({
+					provider: "weixin",
+					scene: "WXSenceTimeline",
+					type: 0,
+					href: "http://192.168.1.8:8080/#/pages/movie/movie?trailerId=" + trailerId,
+					title: "NEXT超英预告：《"+ trailerName +"》",
+					summary: "NEXT超英预告：《"+ trailerName +"》",
+					imageUrl: cover,
+					success: function (res) {
+						console.log("success:" + JSON.stringify(res));
+					}
+				});
+			}
 		}
 	}
 </script>

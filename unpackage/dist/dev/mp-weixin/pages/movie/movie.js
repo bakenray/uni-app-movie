@@ -8,35 +8,157 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var _default =
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var scorestar = function scorestar() {return __webpack_require__.e(/*! import() | components/scoreStar/scoreStar */ "components/scoreStar/scoreStar").then(__webpack_require__.bind(null, /*! @/components/scoreStar/scoreStar.vue */ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\components\\scoreStar\\scoreStar.vue"));};var _default =
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 {
   data: function data() {
     return {
-      trailerInfo: {} };
+      trailerInfo: {},
+      plotPicsArray: [],
+      directorArray: [],
+      actorArray: [] };
 
   },
-  methods: {},
+  components: {
+    scorestar: scorestar },
 
+  methods: {
+    lookMe: function lookMe(e) {
+      var imgIndex = e.currentTarget.dataset.imgindex;
+      uni.previewImage({
+        urls: this.plotPicsArray,
+        current: this.plotPicsArray[imgIndex] });
+
+    },
+    lookStaffs: function lookStaffs(e) {
+      var staffIndex = e.currentTarget.dataset.staffindex;
+      // 拼接演员和导员的数组
+      var directorArray = this.directorArray;
+      var actorArray = this.actorArray;
+      var newStaffArray = [];
+      newStaffArray = newStaffArray.concat(directorArray).concat(actorArray);
+      var urls = [];
+      for (var i = 0; i < newStaffArray.length; i++) {
+        var tempPhoto = newStaffArray[i].photo;
+        urls.push(tempPhoto);
+      }
+      uni.previewImage({
+        urls: urls,
+        current: urls[staffIndex] });
+
+    } },
 
   onLoad: function onLoad(params) {var _this = this;
     // 页面的查询参数
     var trailerId = params.trailerId;
     // 获取预告片的详细信息
-
     uni.showLoading({
       mask: true });
 
@@ -48,12 +170,78 @@ var _default =
       success: function success(res) {
         if (res.data.status == 200) {
           _this.trailerInfo = res.data.data;
+          _this.plotPicsArray = JSON.parse(_this.trailerInfo.plotPics);
         }
-      },
-      complete: function complete() {
-        uni.hideLoading();
       } });
 
+    // 获取导演信息		
+    uni.request({
+      url: this.$common.serverUrl +
+      '/search/staff/' + trailerId + '/1' +
+      '?' + this.$common.qqId,
+      method: 'POST',
+      success: function success(res) {
+        if (res.data.status == 200) {
+          _this.directorArray = res.data.data;
+
+        }
+      } });
+
+    // 获取演员		
+    uni.request({
+      url: this.$common.serverUrl +
+      '/search/staff/' + trailerId + '/2' +
+      '?' + this.$common.qqId,
+      method: 'POST',
+      success: function success(res) {
+        if (res.data.status == 200) {
+          _this.actorArray = res.data.data;
+          console.log(_this.actorArray);
+        }
+      } });
+
+  },
+  onReady: function onReady() {
+    uni.hideLoading();
+    this.videoContext = uni.createVideoContext('myVideo');
+  },
+  onHide: function onHide() {
+    this.videoContext.pause();
+  },
+  onShow: function onShow() {
+    // 			if(this.videoContext){
+    // 				this.videoContext.play()
+    // 			}	
+  },
+  // 只支持小程序端
+  onShareAppMessage: function onShareAppMessage(res) {
+    return {
+      title: 'this.trailerInfo.name',
+      path: '/pages/movie/movie?trailerId=' + this.trailerInfo.id };
+
+  },
+  onNavigationBarButtonTap: function onNavigationBarButtonTap(e) {
+
+    var trailerInfo = this.trailerInfo;
+    var trailerId = trailerInfo.id;
+    var trailerName = trailerInfo.name;
+    var cover = trailerInfo.cover;
+    var poster = trailerInfo.poster;
+
+    if (e.index == 0) {
+      uni.share({
+        provider: "weixin",
+        scene: "WXSenceTimeline",
+        type: 0,
+        href: "http://192.168.1.8:8080/#/pages/movie/movie?trailerId=" + trailerId,
+        title: "NEXT超英预告：《" + trailerName + "》",
+        summary: "NEXT超英预告：《" + trailerName + "》",
+        imageUrl: cover,
+        success: function success(res) {
+          console.log("success:" + JSON.stringify(res));
+        } });
+
+    }
   } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ "./node_modules/@dcloudio/uni-mp-weixin/dist/index.js")["default"]))
 

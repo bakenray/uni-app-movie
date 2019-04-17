@@ -17,7 +17,9 @@
     "email": "",
     "url": ""
   },
-  "permissions": {},
+  "permissions": {
+    "Share": {}
+  },
   "plus": {
     "useragent": {
       "value": "uni-app appservice",
@@ -67,6 +69,12 @@
       },
       "apple": {},
       "plugins": {
+        "share": {
+          "weixin": {
+            "appid": "123",
+            "appsecret": "123"
+          }
+        },
         "audio": {
           "mp3": {
             "description": "Android平台录音支持MP3格式文件"
@@ -82,7 +90,7 @@
       }
     },
     "uni-app": {
-      "compilerVersion": "1.8.2",
+      "compilerVersion": "1.9.1",
       "control": "webview"
     }
   }
