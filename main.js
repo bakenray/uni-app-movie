@@ -3,6 +3,15 @@ import App from './App'
 import common from './common/common.js'
 
 Vue.prototype.$common = common
+Vue.prototype.getGlobalUser = function(key){
+	var userInfo = uni.getStorageSync(key)
+	if(userInfo !=null && userInfo !="" &&userInfo!=undefined){
+		return userInfo
+	}
+	else{
+		return null
+	}	
+}
 
 Vue.config.productionTip = false
 

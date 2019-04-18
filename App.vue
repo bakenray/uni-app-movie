@@ -45,9 +45,5 @@
 		height: 1px;
 		background: #ddd;
 	}	
-	.title-1{
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
+
 </style>
