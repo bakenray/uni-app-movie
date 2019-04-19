@@ -37,7 +37,7 @@
 		</view>
 		<view class="footer-wapper">
 			<view class="footer-words" @tap="clearStorage">清理缓存</view>
-			<view class="footer-words">退出登录</view>
+			<view class="footer-words" @tap="logout">退出登录</view>
 		</view>
 		
 	</view>
@@ -62,6 +62,22 @@
 					mask:false,
 					duration:1600
 				})
+			},
+			// 退出登录
+			logout(){
+				var globalUser = this.getGlobalUser("globalUser")
+				uni.request({
+					url: this.$common.serverUrl+'/user/logout?userId=' + globalUser.id + '&&'+ this.$common.qqId,
+					method:'POST',
+					success: res => {
+						if(res.data.status ==200){
+							uni.removeStorageSync('globalUser')
+							uni.switchTab({
+								url:'../me/me'
+							})
+						}
+					}
+				});	
 			}
 		}
 	}

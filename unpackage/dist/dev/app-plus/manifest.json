@@ -90,7 +90,7 @@
       }
     },
     "uni-app": {
-      "compilerVersion": "1.9.1",
+      "compilerVersion": "1.9.2",
       "control": "webview"
     }
   }

@@ -52,7 +52,7 @@
 	// 使用挂载方法获取用户数据		
 			var userInfo = this.getGlobalUser("globalUser")
 			if(userInfo !=null){
-				this.userIsLogin =true
+				this.userIsLogin = true
 				this.userInfo = userInfo
 			}
 			else{

@@ -14,6 +14,24 @@
 			</view>	
 			<button type="primary" form-type="submit"  class="button-submit">注册/登录</button>
 		</form>
+				
+		<!-- #ifndef H5 -->
+		<view class="third-words">第三方账号登录</view>
+		
+		<view class="third-icon-wapper">
+			<!-- #ifdef APP-PLUS -->
+			<image src="../../static/icon_other/weixin.png" class="third-icon"></image>
+			<image src="../../static/icon_other/QQ.png" class="third-icon"></image>
+			<image src="../../static/icon_other/weibo.png" class="third-icon"></image>			
+			<!-- #endif -->
+			
+			<!-- #ifdef MP-WEIXIN -->
+<!-- 			<button  open-type="getUserInfo" @getuserinfo="wxLogin" class="third-login-weixin">
+				<image src="../../static/icon_other/weixin.png" class="third-icon"></image>
+			</button> -->
+			<!-- #endif -->
+		</view>
+		<!-- #endif -->		
 	</view>
 </template>
 
@@ -25,10 +43,39 @@
 			}
 		},
 		methods: {
+		// #ifdef MP-WEIXIN
+			// 微信小程序端的微信登录
+			wxLogin(e){
+				// 获取微信用户信息
+				var userInfo = e.detail.userInfo
+				var serverUrl = this.$common.serverUrl
+				var qqID = this.$common.qqId
+				uni.login({
+					provider:"weixin",
+					success(result){
+						// 获得微信登录code,授权码
+						var code = result.code 
+						// 设置登录到哪个后端小程序，0-next超英预告，1-超英预告，2-next学院电影预告
+						var loginToWhichMP = 1
+						uni.request({
+							url:serverUrl+'/stu/mpWXLogin/'+ code + "?"+ qqID,
+							data:{
+								"avatarUrl":userInfo.avatarUrl,
+								"nickName":userInfo.nickName,
+								"whichMP":loginToWhichMP
+							},
+							method:"POST",
+							success(result){
+								console.log(result)
+							}
+						})			
+					}
+				})
+			},
+		// #endif
 			formSubmit(e){
 				var username = e.detail.value.username
 				var password = e.detail.value.password
-				
 			// 登录注册请求
 			uni.request({
 				url: this.$common.serverUrl+'/user/registOrLogin?'+ this.$common.qqId,
@@ -64,3 +111,4 @@
 <style>
 @import url("registerLogin.css");
 </style>
+

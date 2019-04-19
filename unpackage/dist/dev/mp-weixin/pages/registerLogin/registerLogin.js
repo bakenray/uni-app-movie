@@ -27,6 +27,24 @@
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default =
 {
   data: function data() {
@@ -35,10 +53,39 @@ var _default =
 
   },
   methods: {
+
+    // 微信小程序端的微信登录
+    wxLogin: function wxLogin(e) {
+      // 获取微信用户信息
+      var userInfo = e.detail.userInfo;
+      var serverUrl = this.$common.serverUrl;
+      var qqID = this.$common.qqId;
+      uni.login({
+        provider: "weixin",
+        success: function success(result) {
+          // 获得微信登录code,授权码
+          var code = result.code;
+          // 设置登录到哪个后端小程序，0-next超英预告，1-超英预告，2-next学院电影预告
+          var loginToWhichMP = 1;
+          uni.request({
+            url: serverUrl + '/stu/mpWXLogin/' + code + "?" + qqID,
+            data: {
+              "avatarUrl": userInfo.avatarUrl,
+              "nickName": userInfo.nickName,
+              "whichMP": loginToWhichMP },
+
+            method: "POST",
+            success: function success(result) {
+              console.log(result);
+            } });
+
+        } });
+
+    },
+
     formSubmit: function formSubmit(e) {
       var username = e.detail.value.username;
       var password = e.detail.value.password;
-
       // 登录注册请求
       uni.request({
         url: this.$common.serverUrl + '/user/registOrLogin?' + this.$common.qqId,

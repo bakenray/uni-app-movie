@@ -12,7 +12,6 @@
 	width:160upx;
 	height:160upx;
 }
-
 .info-wapper{
 	display: flex;
 	flex-direction: row;
@@ -35,4 +34,31 @@
 .button-submit{
 	margin-top:60upx;
 	width:90%;
+}
+.third-words{
+	font-size: 14px;
+	color:#ccc;
+	text-align: center;
+	padding:40upx 0 30upx 0;
+}
+.third-icon{
+	width:80upx;
+	height:80upx;
+	border-radius: 50%;
+	margin:0 30upx;
+}
+.third-login-weixin{
+	width:80upx;
+	height:80upx;
+	border-radius: 50%;
+	border: none;
+	background:transparent;
+	padding:0;
+}
+.third-login-weixin .third-icon{
+	margin:0;
+}
+.third-icon-wapper{
+	display: flex;
+	justify-content: center;
 }

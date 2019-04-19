@@ -72,6 +72,22 @@ var _default =
         mask: false,
         duration: 1600 });
 
+    },
+    // 退出登录
+    logout: function logout() {
+      var globalUser = this.getGlobalUser("globalUser");
+      uni.request({
+        url: this.$common.serverUrl + '/user/logout?userId=' + globalUser.id + '&&' + this.$common.qqId,
+        method: 'POST',
+        success: function success(res) {
+          if (res.data.status == 200) {
+            uni.removeStorageSync('globalUser');
+            uni.switchTab({
+              url: '../me/me' });
+
+          }
+        } });
+
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ "./node_modules/@dcloudio/uni-mp-weixin/dist/index.js")["default"]))
 
