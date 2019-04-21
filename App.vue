@@ -25,6 +25,7 @@
 	.page-block{
 		background: #fff;
 	}
+	
 	.tit{
 		overflow: hidden;
 		text-overflow: ellipsis;

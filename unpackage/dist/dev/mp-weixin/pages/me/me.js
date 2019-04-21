@@ -62,6 +62,7 @@ var _default =
     // 使用挂载方法获取用户数据		
     var userInfo = this.getGlobalUser("globalUser");
     if (userInfo != null) {
+      console.log(JSON.stringify(userInfo));
       this.userIsLogin = true;
       this.userInfo = userInfo;
     } else
@@ -69,7 +70,6 @@ var _default =
       this.userIsLogin = false;
       this.userInfo = {};
     }
-
   } };exports.default = _default;
 
 /***/ }),

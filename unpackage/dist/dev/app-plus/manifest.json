@@ -18,7 +18,8 @@
     "url": ""
   },
   "permissions": {
-    "Share": {}
+    "Share": {},
+    "OAuth": {}
   },
   "plus": {
     "useragent": {
@@ -73,6 +74,20 @@
           "weixin": {
             "appid": "123",
             "appsecret": "123"
+          }
+        },
+        "oauth": {
+          "weixin": {
+            "appid": "123",
+            "appsecret": "123"
+          },
+          "qq": {
+            "appid": "456"
+          },
+          "sina": {
+            "appkey": "789",
+            "appsecret": "789",
+            "redirect_uri": "789"
           }
         },
         "audio": {

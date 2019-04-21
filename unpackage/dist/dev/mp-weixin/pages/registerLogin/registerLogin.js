@@ -53,6 +53,63 @@ var _default =
 
   },
   methods: {
+    appOAuthLogin: function appOAuthLogin(e) {
+      var serverUrl = this.$common.serverUrl;
+      var qqID = this.$common.qqId;
+      // 获取用户的登录类型
+      var logintype = e.currentTarget.dataset.logintype;
+      // 授权登录
+      uni.login({
+        provider: logintype,
+        success: function success(loginres) {
+          // 授权登录登录成功后,获取用户信息
+          uni.getUserInfo({
+            provider: logintype,
+            success: function success(info) {
+              // console.log(JSON.stringify(info))
+              var userInfo = info.userInfo;
+              var face = "";
+              var nickname = "";
+              var openIdOrUid = "";
+              if (logintype == "weixin") {
+                face = userInfo.avatarUrl;
+                nickname = userInfo.nickName;
+                openIdOrUid = userInfo.openId;
+              } else if (logintype == "qq") {
+                face = userInfo.figureurl_qq_2;
+                nickname = userInfo.nickname;
+                openIdOrUid = userInfo.openid;
+              } else if (logintype == "sinaweibo") {
+                face = userInfo.avatar_large;
+                nickname = userInfo.nickname;
+                openIdOrUid = userInfo.id;
+              }
+              // 调用开发者后台,执行一键注册或登录
+              uni.request({
+                url: serverUrl + '/appUnionLogin/' + logintype + '?' + qqID,
+                data: {
+                  "face": face,
+                  "nickname": nickname,
+                  "openIdOrUid": openIdOrUid },
+
+                method: "POST",
+                success: function success(result) {
+                  if (result.data.status == 200) {
+                    var usrInfo = result.data.data;
+                    // 保存用户信息到全局缓存中
+                    uni.setStorageSync('globalUser', userInfo);
+                    // 切换页面跳转,使用tab切换api
+                    uni.switchTab({
+                      url: "../me/me" });
+
+                  }
+                } });
+
+            } });
+
+        } });
+
+    },
 
     // 微信小程序端的微信登录
     wxLogin: function wxLogin(e) {

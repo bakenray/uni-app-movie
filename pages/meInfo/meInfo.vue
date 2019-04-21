@@ -1,7 +1,7 @@
 <template>
-	<view class="page ">
+	<view class="page page-fill">
 		<view class="page-block info-list">
-			<view class="list-bar">
+			<view class="list-bar" @tap="operator">
 				<view class="list-bar-tit">头像</view>
 				<view class="list-bar-img">
 					<image :src="globalUser.faceImage" class="usrimg"></image>
@@ -52,9 +52,45 @@
 		},
 		onShow(){
 			var globalUser = this.getGlobalUser("globalUser")
-			this.globalUser = globalUser
+			this.globalUser = globalUser				
 		},
 		methods: {
+			operator(){
+				var globalUser =this.getGlobalUser("globalUser")
+				uni.showActionSheet({
+					itemList:["查看头像","修改头像"],
+					success(res){
+						var index =res.tapIndex
+						if(index == 0){
+							// 查看头像
+							var faceArr=[]
+							faceArr.push(globalUser.avatarUrl)
+							uni.previewImage({
+								urls:faceArr,
+								current:faceArr[0]
+							})
+						}
+						else if(index==1){
+							// 上传头像
+							uni.chooseImage({
+								count:1,
+								sizeType:['origina','compressed'],
+								sourceType:['album','camera'],
+								success(res){
+									// 获得临时路径
+									var tempFilePth = res.tempFilePaths[0]
+									uni.navigateTo({
+										url:'../meFace/meFace?tempFilePath=' + tempFilePth
+									})
+								}
+							})
+							uni.navigateTo({
+								url:'../meFace/meFace'
+							})
+						}
+					}
+				})
+			},
 			clearStorage(){
 				uni.clearStorage();
 				uni.showToast({

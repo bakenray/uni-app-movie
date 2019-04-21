@@ -6,7 +6,8 @@
     "pages/movie/movie",
     "pages/cover/cover",
     "pages/registerLogin/registerLogin",
-    "pages/meInfo/meInfo"
+    "pages/meInfo/meInfo",
+    "pages/meFace/meFace"
   ],
   "subPackages": [],
   "window": {

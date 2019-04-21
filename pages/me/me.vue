@@ -2,7 +2,7 @@
 	<view class="page page-fill">
 		<view class="header">
 			<view v-if="userIsLogin">
-				<image :src="userInfo.faceImage" class="face"></image>
+				<image :src="userInfo.avatarUrl" class="face"></image>
 			</view>			
 			<view v-else>
 				<image src="../../static/icon_other/default-face.png" class="face"></image>
@@ -52,14 +52,14 @@
 	// 使用挂载方法获取用户数据		
 			var userInfo = this.getGlobalUser("globalUser")
 			if(userInfo !=null){
+				console.log(JSON.stringify(userInfo))
 				this.userIsLogin = true
 				this.userInfo = userInfo
 			}
 			else{
 				this.userIsLogin =false
 				this.userInfo = {}
-			}
-			
+			}	
 		}
 	}
 </script>

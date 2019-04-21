@@ -65,6 +65,42 @@ var _default =
     this.globalUser = globalUser;
   },
   methods: {
+    operator: function operator() {
+      var globalUser = this.getGlobalUser("globalUser");
+      uni.showActionSheet({
+        itemList: ["查看头像", "修改头像"],
+        success: function success(res) {
+          var index = res.tapIndex;
+          if (index == 0) {
+            // 查看头像
+            var faceArr = [];
+            faceArr.push(globalUser.avatarUrl);
+            uni.previewImage({
+              urls: faceArr,
+              current: faceArr[0] });
+
+          } else
+          if (index == 1) {
+            // 上传头像
+            uni.chooseImage({
+              count: 1,
+              sizeType: ['origina', 'compressed'],
+              sourceType: ['album', 'camera'],
+              success: function success(res) {
+                // 获得临时路径
+                var tempFilePth = res.tempFilePaths[0];
+                uni.navigateTo({
+                  url: '../meFace/meFace?tempFilePath=' + tempFilePth });
+
+              } });
+
+            uni.navigateTo({
+              url: '../meFace/meFace' });
+
+          }
+        } });
+
+    },
     clearStorage: function clearStorage() {
       uni.clearStorage();
       uni.showToast({

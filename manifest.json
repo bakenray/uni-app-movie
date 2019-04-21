@@ -14,7 +14,8 @@
             "delay" : 0
         },
         "modules" : {
-            "Share" : {}
+            "Share" : {},
+            "OAuth" : {}
         },
         /* 模块配置 */
         "distribute" : {
@@ -53,6 +54,20 @@
                     "weixin" : {
                         "appid" : "123",
                         "appsecret" : "123"
+                    }
+                },
+                "oauth" : {
+                    "weixin" : {
+                        "appid" : "123",
+                        "appsecret" : "123"
+                    },
+                    "qq" : {
+                        "appid" : "456"
+                    },
+                    "sina" : {
+                        "appkey" : "789",
+                        "appsecret" : "789",
+                        "redirect_uri" : "789"
                     }
                 }
             }
