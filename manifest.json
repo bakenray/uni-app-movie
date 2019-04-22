@@ -83,5 +83,8 @@
             "urlCheck" : false
         },
         "usingComponents" : true
+    },
+    "h5" : {
+        "title" : "超英电影预告"
     }
 }

@@ -6972,6 +6972,40 @@ createApp(app).$mount();
 
 /***/ }),
 
+/***/ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\main.js?{\"page\":\"pages%2FchangeBirthday%2FchangeBirthday\"}":
+/*!*************************************************************************************************************************!*\
+  !*** C:/Users/Administrator/Desktop/movie-app/uni-app-movie/main.js?{"page":"pages%2FchangeBirthday%2FchangeBirthday"} ***!
+  \*************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(createPage) {__webpack_require__(/*! uni-pages */ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\pages.json");
+
+var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ "./node_modules/@dcloudio/vue-cli-plugin-uni/packages/mp-vue/dist/mp.runtime.esm.js"));
+var _changeBirthday = _interopRequireDefault(__webpack_require__(/*! ./pages/changeBirthday/changeBirthday.vue */ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\pages\\changeBirthday\\changeBirthday.vue"));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+createPage(_changeBirthday.default);
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ "./node_modules/@dcloudio/uni-mp-weixin/dist/index.js")["createPage"]))
+
+/***/ }),
+
+/***/ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\main.js?{\"page\":\"pages%2FchangeNickname%2FchangeNickname\"}":
+/*!*************************************************************************************************************************!*\
+  !*** C:/Users/Administrator/Desktop/movie-app/uni-app-movie/main.js?{"page":"pages%2FchangeNickname%2FchangeNickname"} ***!
+  \*************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(createPage) {__webpack_require__(/*! uni-pages */ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\pages.json");
+
+var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ "./node_modules/@dcloudio/vue-cli-plugin-uni/packages/mp-vue/dist/mp.runtime.esm.js"));
+var _changeNickname = _interopRequireDefault(__webpack_require__(/*! ./pages/changeNickname/changeNickname.vue */ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\pages\\changeNickname\\changeNickname.vue"));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+createPage(_changeNickname.default);
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ "./node_modules/@dcloudio/uni-mp-weixin/dist/index.js")["createPage"]))
+
+/***/ }),
+
 /***/ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\main.js?{\"page\":\"pages%2Fcover%2Fcover\"}":
 /*!*******************************************************************************************************!*\
   !*** C:/Users/Administrator/Desktop/movie-app/uni-app-movie/main.js?{"page":"pages%2Fcover%2Fcover"} ***!
@@ -7104,6 +7138,23 @@ createPage(_registerLogin.default);
 var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ "./node_modules/@dcloudio/vue-cli-plugin-uni/packages/mp-vue/dist/mp.runtime.esm.js"));
 var _search = _interopRequireDefault(__webpack_require__(/*! ./pages/search/search.vue */ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\pages\\search\\search.vue"));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
 createPage(_search.default);
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ "./node_modules/@dcloudio/uni-mp-weixin/dist/index.js")["createPage"]))
+
+/***/ }),
+
+/***/ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\main.js?{\"page\":\"pages%2FselectSex%2FselectSex\"}":
+/*!***************************************************************************************************************!*\
+  !*** C:/Users/Administrator/Desktop/movie-app/uni-app-movie/main.js?{"page":"pages%2FselectSex%2FselectSex"} ***!
+  \***************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(createPage) {__webpack_require__(/*! uni-pages */ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\pages.json");
+
+var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ "./node_modules/@dcloudio/vue-cli-plugin-uni/packages/mp-vue/dist/mp.runtime.esm.js"));
+var _selectSex = _interopRequireDefault(__webpack_require__(/*! ./pages/selectSex/selectSex.vue */ "C:\\Users\\Administrator\\Desktop\\movie-app\\uni-app-movie\\pages\\selectSex\\selectSex.vue"));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+createPage(_selectSex.default);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ "./node_modules/@dcloudio/uni-mp-weixin/dist/index.js")["createPage"]))
 
 /***/ }),

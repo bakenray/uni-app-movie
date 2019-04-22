@@ -19,6 +19,9 @@
 	height:100%;
 	background-color: #f7f7f7;
 }
+.page-fill{
+	position: absolute;
+}
 .page-block{
 	background: #fff;
 }
@@ -43,6 +46,9 @@
 .line{
 	height: 1px;
 	background: #ddd;
-}	
-
+}
+.submitBtn{
+	width:710rpx;
+	margin-top:50rpx;
+}
 

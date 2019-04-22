@@ -8,32 +8,39 @@
 					<image src="../../static/icon_other/left-gray-arrow.png" class="arrow"></image>
 				</view>
 			</view>
-			
-			<view class="list-bar">
-				<view class="list-bar-tit">昵称</view>
-				<view class="list-bar-img">
-					<view class="othername">{{globalUser.nickname}}</view>
-					<image src="../../static/icon_other/left-gray-arrow.png" class="arrow"></image>
-				</view>
-			</view>	
-			<view class="list-bar">
-				<view class="list-bar-tit">生日</view>
-				<view class="list-bar-img">
-					<view class="othername">{{globalUser.birthday}}</view>
-					<image src="../../static/icon_other/left-gray-arrow.png" class="arrow"></image>
-				</view>
-			</view>			
-			<view class="list-bar">
-				<view class="list-bar-tit">性别</view>
-				<view class="list-bar-img">
-					<view class="othername">
-						<view v-if="globalUser.sex==1">男</view>
-						<view v-else-if="globalUser.sex==0">女</view>		
-						<view v-else>未选择</view>				
+			<!-- 修改昵称 -->
+			<navigator url="/pages/changeNickname/changeNickname">
+				<view class="list-bar">
+					<view class="list-bar-tit">昵称</view>
+					<view class="list-bar-img">
+						<view class="othername">{{globalUser.nickname}}</view>
+						<image src="../../static/icon_other/left-gray-arrow.png" class="arrow"></image>
 					</view>
-					<image src="../../static/icon_other/left-gray-arrow.png" class="arrow"></image>
-				</view>
-			</view>					
+					
+				</view>	
+			</navigator>
+			<navigator url="/pages/changeBirthday/changeBirthday">			
+				<view class="list-bar">
+					<view class="list-bar-tit">生日</view>
+					<view class="list-bar-img">
+						<view class="othername">{{globalUser.birthday}}</view>
+						<image src="../../static/icon_other/left-gray-arrow.png" class="arrow"></image>
+					</view>
+				</view>		
+			</navigator>	
+			<navigator url="/pages/selectSex/selectSex">									
+				<view class="list-bar">
+					<view class="list-bar-tit">性别</view>
+					<view class="list-bar-img">
+						<view class="othername">
+							<view v-if="globalUser.sex==1">男</view>
+							<view v-else-if="globalUser.sex==0">女</view>		
+							<view v-else>未选择</view>				
+						</view>
+						<image src="../../static/icon_other/left-gray-arrow.png" class="arrow"></image>
+					</view>
+				</view>		
+			</navigator>					
 		</view>
 		<view class="footer-wapper">
 			<view class="footer-words" @tap="clearStorage">清理缓存</view>
@@ -54,7 +61,7 @@
 			var globalUser = this.getGlobalUser("globalUser")
 			this.globalUser = globalUser				
 		},
-		methods: {
+		methods: {		
 			operator(){
 				var globalUser =this.getGlobalUser("globalUser")
 				uni.showActionSheet({

@@ -22,6 +22,9 @@
 		height:100%;
 		background-color: #f7f7f7;
 	}
+	.page-fill{
+		position: absolute;
+	}
 	.page-block{
 		background: #fff;
 	}
@@ -46,5 +49,8 @@
 		height: 1px;
 		background: #ddd;
 	}	
-
+	.submitBtn{
+		width:710upx;
+		margin-top:50upx;
+	}
 </style>
